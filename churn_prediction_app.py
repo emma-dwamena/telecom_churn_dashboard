@@ -36,7 +36,7 @@ st.set_page_config(
 #Joshua Kwaku Mensah - 22257672
 #""")
 
-Logo = Image.open('telco_logo')
+Logo = Image.open('telco_logo.jpg')
 st.image(Logo, caption="", width=150)
 
 # Initialize session state for data persistence across pages
