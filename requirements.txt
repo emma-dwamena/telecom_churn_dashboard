@@ -7,4 +7,3 @@ numpy
 statsmodels
 sklearn
 warnings
-seaborn
