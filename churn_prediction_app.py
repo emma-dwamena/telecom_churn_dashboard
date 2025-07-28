@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 #import seaborn as sn
 import plotly.express as px
 import plotly.graph_objects as go
-import streamlit as st
+import streamlit as s
 import sklearn
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -861,7 +861,7 @@ def page6():
         
         with insights_tabs[3]:
             if st.session_state.model_metrics:
-                st.markdown("### # Model Performance Summary:")
+                st.markdown("### Model Performance Summary:")
                 
                 # Best performing model
                 best_model = None
