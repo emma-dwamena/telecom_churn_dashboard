@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 #import seaborn as sn
 import plotly.express as px
 import plotly.graph_objects as go
-import streamlit as s
+import streamlit as st
 import sklearn
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
