@@ -36,7 +36,7 @@ st.set_page_config(
 #Joshua Kwaku Mensah - 22257672
 #""")
 
-Logo = Image.open('telco_logo.jpg')
+Logo = Image.open("C:/Users/HP/Documents/MSBA/MSBA_Sem_2/Supervised_Machine_Learning/Assignment/telco_logo.jpg")
 st.image(Logo, caption="", width=150)
 
 # Initialize session state for data persistence across pages
@@ -94,7 +94,7 @@ def preprocess_data(df1):
 def page1():
     st.markdown("""
     <div style="background-color: #f2f7f7; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
-        <h2 style="color: #030a0a; text-align: center;">👥 Group 7 Team Members</h2>
+        <h2 style="color: #030a0a; text-align: center;">👥 Group 7 Team Members (#TeamZoe)</h2>
         <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
             <div>• Ruth Mensah - 22253087</div>
             <div>• Emmanuel Oduro Dwamena - 11410636</div>
@@ -302,7 +302,7 @@ def page3():
             with st.spinner("Training models... This may take sometime."):
                 
                 # Step 1: Impute missing values
-                imputer = SimpleImputer(strategy='median')
+                imputer = SimpleImputer(strategy='mean')  # You can change to 'median' if needed
                 x_train_imputed = imputer.fit_transform(x_train)
                 x_test_imputed = imputer.transform(x_test)
 
@@ -366,6 +366,8 @@ def page3():
                 - Requires feature scaling
                 """)
 
+            
+
         # Feature importance (if Random Forest is trained)
         if 'Random Forest' in st.session_state.models:
             st.markdown("### Feature Importance (Random Forest)")
@@ -383,6 +385,33 @@ def page3():
             )
             fig_importance.update_layout(yaxis={'categoryorder': 'total ascending'})
             st.plotly_chart(fig_importance, use_container_width=True)
+
+        if 'SVM' in st.session_state.models:
+            svm_model = st.session_state.models['SVM']
+
+            # Ensure this is only done for linear kernel
+            if svm_model.kernel == 'linear':
+                st.markdown("### Feature Importance (SVM - Linear Kernel)")
+
+                coef = svm_model.coef_[0]  # For binary classification
+                feature_importance_svm = pd.DataFrame({
+                    'Feature': st.session_state.feature_names,
+                    'Importance': np.abs(coef)  # Absolute importance
+                }).sort_values('Importance', ascending=True)
+
+                fig_svm_importance = px.bar(
+                    feature_importance_svm,
+                    x='Importance', y='Feature',
+                    orientation='h',
+                    title="Order of Importance of Features"
+                )
+                fig_svm_importance.update_layout(
+                    yaxis=dict(categoryorder='total ascending'),
+                    xaxis_title='Absolute Coefficient Value',
+                    yaxis_title='Feature',
+                    title_x=0.5
+                )
+                st.plotly_chart(fig_svm_importance, use_container_width=True)
     
     else:
         st.error("No processed data available. Please complete the data preprocessing step first.")
@@ -861,7 +890,7 @@ def page6():
         
         with insights_tabs[3]:
             if st.session_state.model_metrics:
-                st.markdown("### Model Performance Summary:")
+                st.markdown("### # Model Performance Summary:")
                 
                 # Best performing model
                 best_model = None
