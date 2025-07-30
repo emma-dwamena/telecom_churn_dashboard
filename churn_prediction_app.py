@@ -196,7 +196,7 @@ def page2():
             missing_values = df1.isna().sum()
     
             if missing_values.sum() > 0:
-                st.warning(f"Found {missing_values.sum()} missing values across {missing_values[missing_values > 0].shape[0]} columns.")
+                st.warning(f"Found {missing_values.sum()} missing values in {missing_values[missing_values > 0].shape[0]} column(s).")
                 st.dataframe(missing_values[missing_values > 0])
             else:
                 st.success("No missing values found!")
