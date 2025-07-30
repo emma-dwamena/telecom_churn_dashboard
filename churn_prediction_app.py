@@ -230,7 +230,7 @@ def page2():
                 # Show preprocessing summary
                 st.markdown("### Preprocessing Summary:")
                 st.write("1. Converted TotalCharges to numeric format")
-                st.write("2. Handled missing values(if any) using median imputation")
+                st.write("2. Handled missing values using median imputation")
                 st.write("3. Applied Label Encoding to categorical variables")
 
             # Display processed data if available
