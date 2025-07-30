@@ -36,7 +36,7 @@ st.set_page_config(
 #Joshua Kwaku Mensah - 22257672
 #""")
 
-Logo = Image.open("telco_logo.jpg")
+Logo = Image.open("C:/Users/HP/Documents/MSBA/MSBA_Sem_2/Supervised_Machine_Learning/Assignment/telco_logo.jpg")
 st.image(Logo, caption="", width=150)
 
 # Initialize session state for data persistence across pages
@@ -179,23 +179,27 @@ def page1():
 def page2():
     st.subheader("Data Preprocessing")
 
-    if 'df1' in st.session_state:
-        df1 = st.session_state['df1'].copy()  # Avoid modifying original in place
-
-        # Replace blank/placeholder strings with NaN
-        df1.replace(to_replace=["", " ", "NA", "N/A", "null", "Null", "NaN"], value=pd.NA, inplace=True)
-
-        # Optional: Save cleaned data back to session
-        st.session_state['df1'] = df1
-
-        # Check for missing values
-        missing_values = df1.isna().sum()
-
-        if missing_values.sum() > 0:
-            st.warning(f"⚠️ Found {missing_values.sum()} missing values across {missing_values[missing_values > 0].shape[0]} columns.")
-            st.dataframe(missing_values[missing_values > 0])
-        else:
-            st.success("✅ No missing values found!")
+    if st.checkbox('Check for null values'):
+        if 'df1' in st.session_state:
+            df1 = st.session_state['df1'].copy()  # Avoid modifying original in place
+    
+            # Strip whitespace from all string cells first
+            df1 = df1.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+    
+            # Replace blank/placeholder strings with NaN
+            df1.replace(to_replace=["", " ", "NA", "N/A", "null", "Null", "NaN"], value=pd.NA, inplace=True)
+    
+            # Optional: Save cleaned data back to session
+            st.session_state['df1'] = df1
+    
+            # Check for missing values
+            missing_values = df1.isna().sum()
+    
+            if missing_values.sum() > 0:
+                st.warning(f"⚠️ Found {missing_values.sum()} missing values across {missing_values[missing_values > 0].shape[0]} columns.")
+                st.dataframe(missing_values[missing_values > 0])
+            else:
+                st.success("✅ No missing values found!")
 
     # Data types analysis
     if st.checkbox('Data Types Overview'):
