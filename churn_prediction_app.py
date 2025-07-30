@@ -751,10 +751,10 @@ def page6():
         
         st.markdown(f"""
                    Project Outcome Summary
-                    Analyzed {len(data):,} customer records with {churn_rate1:.1f}% churn rate
-                    Identified ${annual_revenue_lost1:,.0f} in annual revenue at risk
-                    Achieved high accuracy in churn prediction with actionable insights
-                    Enabled proactive customer retention with potential 5-15% churn reduction
+                    Analyzed {len(data):,} customer records with {churn_rate1:.1f}% churn rate                     
+                    Identified ${annual_revenue_lost1:,.0f} in annual revenue at risk                           
+                    Achieved high accuracy in churn prediction with actionable insights                               
+                    Enabled proactive customer retention with potential 5-15% churn reduction                                
                     """)
 
         # Business insights from data analysis
