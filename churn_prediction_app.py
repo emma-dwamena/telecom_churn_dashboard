@@ -36,7 +36,7 @@ st.set_page_config(
 #Joshua Kwaku Mensah - 22257672
 #""")
 
-Logo = Image.open("telco_logo.jpg")
+Logo = Image.open("C:/Users/HP/Documents/MSBA/MSBA_Sem_2/Supervised_Machine_Learning/Assignment/telco_logo.jpg")
 st.image(Logo, caption="", width=150)
 
 # Initialize session state for data persistence across pages
@@ -179,15 +179,23 @@ def page1():
 def page2():
     st.subheader("Data Preprocessing")
 
-    if st.checkbox('Check for null values'):
-        if 'df1' in st.session_state:
-            df1= st.session_state['df1']
-            missing_values = df1.isnull().sum()
-            if missing_values.sum() > 0:
-                st.warning(f"Found {missing_values.sum()} missing values")
-                st.dataframe(missing_values[missing_values > 0])
-            else:
-                st.success("No missing values found!")
+    if 'df1' in st.session_state:
+        df1 = st.session_state['df1'].copy()  # Avoid modifying original in place
+
+        # Replace blank/placeholder strings with NaN
+        df1.replace(to_replace=["", " ", "NA", "N/A", "null", "Null", "NaN"], value=pd.NA, inplace=True)
+
+        # Optional: Save cleaned data back to session
+        st.session_state['df1'] = df1
+
+        # Check for missing values
+        missing_values = df1.isna().sum()
+
+        if missing_values.sum() > 0:
+            st.warning(f"⚠️ Found {missing_values.sum()} missing values across {missing_values[missing_values > 0].shape[0]} columns.")
+            st.dataframe(missing_values[missing_values > 0])
+        else:
+            st.success("✅ No missing values found!")
 
     # Data types analysis
     if st.checkbox('Data Types Overview'):
@@ -890,7 +898,7 @@ def page6():
         
         with insights_tabs[3]:
             if st.session_state.model_metrics:
-                st.markdown("### Model Performance Summary:")
+                st.markdown("### # Model Performance Summary:")
                 
                 # Best performing model
                 best_model = None
