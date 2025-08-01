@@ -94,7 +94,7 @@ def preprocess_data(df1):
 def page1():
     st.markdown("""
     <div style="background-color: #f2f7f7; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
-        <h2 style="color: #030a0a; text-align: center;">👥 Group 7 Team Members</h2>
+        <h2 style="color: #030a0a; text-align: center;">👥 Group 7 Team Members (#TeamZoe)</h2>
         <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
             <div>• Ruth Mensah - 22253087</div>
             <div>• Emmanuel Oduro Dwamena - 11410636</div>
@@ -174,36 +174,44 @@ def page1():
         fig = px.bar(contract_churn, x='Contract', y='Count', color='Churn',
                  title="Churn by Contract Type", barmode='group',
                  color_discrete_sequence=['#ff9999', '#66b3ff'])
-        st.plotly_chart(fig, use_container_width=True)  
+        st.plotly_chart(fig, use_container_width=True)
+    
 
 def page2():
     st.subheader("Data Preprocessing")
 
     if st.checkbox('Check for null values'):
-        if 'df1' in st.session_state:
-            df1 = st.session_state['df1'].copy()  # Avoid modifying original in place
-    
-            # Strip whitespace from all string cells first
-            df1 = df1.applymap(lambda x: x.strip() if isinstance(x, str) else x)
-    
-            # Replace blank/placeholder strings with NaN
-            df1.replace(to_replace=["", " ", "NA", "N/A", "null", "Null", "NaN"], value=pd.NA, inplace=True)
-    
-            # Optional: Save cleaned data back to session
+        if 'df1' in st.session_state and st.session_state['df1'] is not None:
+            df1 = st.session_state['df1'].copy()
+
+            # Replace common placeholders with NaN
+            null_placeholders = ["", " ", "NA", "N/A", "null", "Null", "NaN", "-", "--"]
+            df1.replace(to_replace=null_placeholders, value=pd.NA, inplace=True)
+
+            # Save cleaned data back to session
             st.session_state['df1'] = df1
-    
-            # Check for missing values
-            missing_values = df1.isna().sum()
-    
-            if missing_values.sum() > 0:
-                st.warning(f"Found {missing_values.sum()} missing values in {missing_values[missing_values > 0].shape[0]} column(s).")
-                st.dataframe(missing_values[missing_values > 0])
+
+            # Compute missing values
+            missing_count = df1.isna().sum()
+            missing_percent = (missing_count / len(df1)) * 100
+            missing_df = pd.DataFrame({
+                "Missing Values": missing_count,
+                "Percent Missing": missing_percent.round(2)
+            })
+            missing_df = missing_df[missing_df["Missing Values"] > 0]
+
+            if not missing_df.empty:
+                st.warning(f"⚠️ Found {missing_df.shape[0]} columns with missing values.")
+                st.dataframe(missing_df)
             else:
-                st.success("No missing values found!")
+                st.success("✅ No missing values found!")
+
+        else:
+            st.error("No dataset loaded. Please load the dataset first.")
 
     # Data types analysis
     if st.checkbox('Data Types Overview'):
-        if 'df1' in st.session_state:
+        if 'df1' in st.session_state and st.session_state['df1'] is not None:
             df1= st.session_state['df1']
             st.markdown("###  Data Types Overview")
             data_types_df = pd.DataFrame({
@@ -213,10 +221,12 @@ def page2():
                 'Example Values': [str(df1[col].unique()[:3])[1:-1] for col in df1.columns]
             })
             st.dataframe(data_types_df, use_container_width=True)
+        else:
+            st.error("No dataset loaded. Please load the dataset first.")
 
     # Preprocessing steps
     if st.checkbox('Preprocess Data'):
-        if 'df1' in st.session_state:
+        if 'df1' in st.session_state and st.session_state['df1'] is not None:
             df1= st.session_state['df1']
 
             if st.button("Start Preprocessing", type="primary"):
@@ -230,7 +240,7 @@ def page2():
                 # Show preprocessing summary
                 st.markdown("### Preprocessing Summary:")
                 st.write("1. Converted TotalCharges to numeric format")
-                st.write("2. Handled missing values using median imputation")
+                st.write("2. Handled missing values(if any) using median imputation")
                 st.write("3. Applied Label Encoding to categorical variables")
 
             # Display processed data if available
@@ -246,6 +256,9 @@ def page2():
                 with col2:
                     st.markdown("**Processed Data:**")
                     st.dataframe(st.session_state.processed_data.head(), use_container_width=True)
+
+        else:
+            st.error("No dataset loaded. Please load the dataset first.")
 
     if st.checkbox('Check Heat Map'):       
     # Correlation heatmap of processed data
@@ -751,10 +764,10 @@ def page6():
         
         st.markdown(f"""
                    Project Outcome Summary
-                    Analyzed {len(data):,} customer records with {churn_rate1:.1f}% churn rate                     
-                    Identified ${annual_revenue_lost1:,.0f} in annual revenue at risk                           
-                    Achieved high accuracy in churn prediction with actionable insights                               
-                    Enabled proactive customer retention with potential 5-15% churn reduction                                
+                    Analyzed {len(data):,} customer records with {churn_rate1:.1f}% churn rate     
+                    Identified ${annual_revenue_lost1:,.0f} in annual revenue at risk
+                    Achieved high accuracy in churn prediction with actionable insights
+                    Enabled proactive customer retention with potential 5-15% churn reduction
                     """)
 
         # Business insights from data analysis
