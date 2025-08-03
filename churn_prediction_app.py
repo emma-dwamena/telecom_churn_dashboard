@@ -21,10 +21,17 @@ from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_sc
 import warnings
 warnings.filterwarnings('ignore')
 
+# Set up page configuration
 st.set_page_config(
-     page_title='Customer Churn Prediction',
-     page_icon='📡',
-     )
+    page_title='Customer Churn Prediction',
+    page_icon='📡',
+    layout='centered',
+    initial_sidebar_state='expanded'  # or 'collapsed'
+)
+
+# Page content
+st.title("📡 Customer Churn Prediction")
+st.markdown("Use this tool to explore and predict churn from telecom customers.")
 
 #st.sidebar.markdown("""
 #**Group 7 Team Members**
