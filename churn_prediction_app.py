@@ -32,7 +32,7 @@ st.set_page_config(
 )
 
 # Page content
-st.title("📡 Customer Churn Prediction")
+st.title("Customer Churn Prediction App")
 
 #st.sidebar.markdown("""
 #**Group 7 Team Members**
