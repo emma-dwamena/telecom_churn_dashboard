@@ -44,8 +44,6 @@ st.title("Customer Churn Prediction App")
 #Joshua Kwaku Mensah - 22257672
 #""")
 
-
-
 # Initialize session state for data persistence across pages
 if 'df1' not in st.session_state:
     st.session_state.df1 = None
@@ -70,11 +68,9 @@ if upload_file is not None:
     except Exception as e:
         st.sidebar.error(f"Error reading the file: {e}")
 
-
 # Sidebar navigation
 st.sidebar.title("Navigation")
 st.sidebar.markdown("---")
-
 
 def preprocess_data(df1):
     processed_data = df1.copy()
@@ -96,7 +92,6 @@ def preprocess_data(df1):
         label_encoders[col] = le
     
     return processed_data, label_encoders
-
 
 def page1():
     st.markdown("""
@@ -158,7 +153,6 @@ def page1():
                                     #barmode='overlay', opacity=0.9)
             st.plotly_chart(fig_tenure1, use_container_width=False)   
  
-
         # Additional visualizations
         col3, col4 = st.columns(2)
 
@@ -183,7 +177,6 @@ def page1():
                  color_discrete_sequence=['#ff9999', '#66b3ff'])
         st.plotly_chart(fig, use_container_width=True)
     
-
 def page2():
     st.subheader("Data Preprocessing")
 
