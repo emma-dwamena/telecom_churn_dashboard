@@ -684,7 +684,7 @@ def page5():
                     risk_level = "HIGH"
                     risk_color = "#ff4444"
                 else:
-                    st.success("** ✅ LOW RISK: Customer likely to STAY**")
+                    st.success("**✅ LOW RISK: Customer likely to STAY**")
                     risk_level = "LOW"
                     risk_color = "#44ff44"
             
