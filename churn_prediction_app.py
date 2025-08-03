@@ -201,10 +201,10 @@ def page2():
             missing_df = missing_df[missing_df["Missing Values"] > 0]
 
             if not missing_df.empty:
-                st.warning(f"⚠️ Found {missing_df.shape[0]} columns with missing values.")
+                st.warning(f"Found {missing_df.shape[0]} columns with missing values.")
                 st.dataframe(missing_df)
             else:
-                st.success("✅ No missing values found!")
+                st.success("No missing values found!")
 
         else:
             st.error("No dataset loaded. Please load the dataset first.")
