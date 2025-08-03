@@ -21,17 +21,18 @@ from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_sc
 import warnings
 warnings.filterwarnings('ignore')
 
-# Set up page configuration
+Logo = Image.open("telco_logo.jpg")
+st.image(Logo, caption="", width=150)
+
+# page configuration
 st.set_page_config(
     page_title='Customer Churn Prediction',
     page_icon='📡',
-    layout='centered',
-    initial_sidebar_state='expanded'  # or 'collapsed'
+    layout='centered'
 )
 
 # Page content
 st.title("📡 Customer Churn Prediction")
-st.markdown("Use this tool to explore and predict churn from telecom customers.")
 
 #st.sidebar.markdown("""
 #**Group 7 Team Members**
@@ -43,8 +44,7 @@ st.markdown("Use this tool to explore and predict churn from telecom customers."
 #Joshua Kwaku Mensah - 22257672
 #""")
 
-Logo = Image.open("telco_logo.jpg")
-st.image(Logo, caption="", width=150)
+
 
 # Initialize session state for data persistence across pages
 if 'df1' not in st.session_state:
