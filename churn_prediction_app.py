@@ -94,7 +94,7 @@ def preprocess_data(df1):
 def page1():
     st.markdown("""
     <div style="background-color: #f2f7f7; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
-        <h2 style="color: #030a0a; text-align: center;">👥 Group 7 Team Members</h2>
+        <h2 style="color: #030a0a; text-align: center;">Group 7 Team Members</h2>
         <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
             <div>• Ruth Mensah - 22253087</div>
             <div>• Emmanuel Oduro Dwamena - 11410636</div>
