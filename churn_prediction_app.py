@@ -332,7 +332,7 @@ def page3():
                 x_test_imputed = imputer.transform(x_test)
 
                 # Step 2: Scale features for SVM
-                scaler = MinMaxScalerScaler()
+                scaler = MinMaxScaler()
                 x_train_scaled = scaler.fit_transform(x_train_imputed)
                 x_test_scaled = scaler.transform(x_test_imputed)
 
