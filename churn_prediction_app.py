@@ -184,9 +184,9 @@ def page2():
         if 'df1' in st.session_state and st.session_state['df1'] is not None:
             df1 = st.session_state['df1'].copy()
 
-            # Replace common placeholders with NaN
-            null_placeholders = ["", " ", "NA", "N/A", "null", "Null", "NaN", "-", "--"]
-            df1.replace(to_replace=null_placeholders, value=pd.NA, inplace=True)
+            # Replace null cells with NaN
+            null_values = ["", " ", "NA", "N/A", "null", "Null", "NaN", "-", "--"]
+            df1.replace(to_replace=null_values, value=pd.NA, inplace=True)
 
             # Save cleaned data back to session
             st.session_state['df1'] = df1
