@@ -1027,8 +1027,6 @@ def page7():
             pipeline = joblib.load(PIPELINE_PATH)
             return model, pipeline
     
-        st.warning("Training model because it doesn't exist...")
-    
         df = load_training_data()
         X = df.drop(columns=["customerID", "Churn"])
         y = df["Churn"].map({"Yes": 1, "No": 0})
