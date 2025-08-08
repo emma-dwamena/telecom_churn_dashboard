@@ -1000,7 +1000,6 @@ def page6():
 
 def page7():
     st.subheader("Batch Prediction")
-    st.title("📡 Batch Customer Churn Prediction")
 
     # Check if models are available from main app
     if not st.session_state.models:
