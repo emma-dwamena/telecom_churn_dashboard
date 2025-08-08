@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-#import seaborn as sn
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
@@ -44,8 +43,7 @@ st.set_page_config(
 #Sandra Animwaa Bamfo - 22256394
 #Joshua Kwaku Mensah - 22257672
 #""")
-st.write("scikit-learn version:", sklearn.__version__)
-st.write("Saved-with scikit-learn version:", sklearn.__version__)
+
 Logo = Image.open("telco_logo.jpg")
 st.image(Logo, caption="", width=150)
 
