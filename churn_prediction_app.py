@@ -44,7 +44,7 @@ st.set_page_config(
 #Sandra Animwaa Bamfo - 22256394
 #Joshua Kwaku Mensah - 22257672
 #""")
-
+st.write("scikit-learn version:", sklearn.__version__)
 Logo = Image.open("telco_logo.jpg")
 st.image(Logo, caption="", width=150)
 
