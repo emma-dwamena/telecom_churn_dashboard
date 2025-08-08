@@ -1003,6 +1003,12 @@ def page7():
     st.subheader("Batch Prediction")
     st.title("📡 Batch Customer Churn Prediction")
 
+    # Check if models are available from main app
+    if not st.session_state.models:
+        st.error("No trained models available. Please complete the model training step first.")
+        st.info("Go to 'Model Training' page and train models before using batch prediction.")
+        return
+
     # -----------------------------
     # 2. Load or Train Model
     MODEL_PATH = "random_forest_churn_model.pkl"
