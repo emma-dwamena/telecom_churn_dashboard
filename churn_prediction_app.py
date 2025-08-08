@@ -19,20 +19,21 @@ from sklearn.impute import SimpleImputer
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc, roc_auc_score
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 import warnings
+import os
+import joblib
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 warnings.filterwarnings('ignore')
 
-Logo = Image.open("telco_logo.jpg")
-st.image(Logo, caption="", width=150)
-
-# page configuration
 st.set_page_config(
-    page_title='Customer Churn Prediction',
-    page_icon='📡',
-    layout='centered'
-)
+     page_title='Customer Churn Prediction',
+     page_icon='📡',
+     )
 
-# Page content
-st.title("Customer Churn Prediction App")
 
 #st.sidebar.markdown("""
 #**Group 7 Team Members**
@@ -43,6 +44,9 @@ st.title("Customer Churn Prediction App")
 #Sandra Animwaa Bamfo - 22256394
 #Joshua Kwaku Mensah - 22257672
 #""")
+
+Logo = Image.open("telco_logo.jpg")
+st.image(Logo, caption="", width=150)
 
 # Initialize session state for data persistence across pages
 if 'df1' not in st.session_state:
@@ -68,9 +72,11 @@ if upload_file is not None:
     except Exception as e:
         st.sidebar.error(f"Error reading the file: {e}")
 
+
 # Sidebar navigation
 st.sidebar.title("Navigation")
 st.sidebar.markdown("---")
+
 
 def preprocess_data(df1):
     processed_data = df1.copy()
@@ -78,6 +84,9 @@ def preprocess_data(df1):
     # Handle TotalCharges column (convert to numeric and handle missing values)
     processed_data['TotalCharges'] = pd.to_numeric(processed_data['TotalCharges'], errors='coerce')
     processed_data['TotalCharges'].fillna(processed_data['TotalCharges'].median(), inplace=True)
+    categorical_cols = df1.select_dtypes(include=['object']).columns
+    mode_imputer = SimpleImputer(strategy='most_frequent')
+    df1[categorical_cols] = mode_imputer.fit_transform(df1[categorical_cols])
     
     # Create label encoders for categorical variables
     label_encoders = {}
@@ -93,10 +102,11 @@ def preprocess_data(df1):
     
     return processed_data, label_encoders
 
+
 def page1():
     st.markdown("""
     <div style="background-color: #f2f7f7; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
-        <h2 style="color: #030a0a; text-align: center;">Group 7 Team Members</h2>
+        <h2 style="color: #030a0a; text-align: center;">👥 Group 7 Team Members</h2>
         <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
             <div>• Ruth Mensah - 22253087</div>
             <div>• Emmanuel Oduro Dwamena - 11410636</div>
@@ -153,6 +163,7 @@ def page1():
                                     #barmode='overlay', opacity=0.9)
             st.plotly_chart(fig_tenure1, use_container_width=False)   
  
+
         # Additional visualizations
         col3, col4 = st.columns(2)
 
@@ -177,6 +188,7 @@ def page1():
                  color_discrete_sequence=['#ff9999', '#66b3ff'])
         st.plotly_chart(fig, use_container_width=True)
     
+
 def page2():
     st.subheader("Data Preprocessing")
 
@@ -184,9 +196,9 @@ def page2():
         if 'df1' in st.session_state and st.session_state['df1'] is not None:
             df1 = st.session_state['df1'].copy()
 
-            # Replace null cells with NaN
-            null_values = ["", " ", "NA", "N/A", "null", "Null", "NaN", "-", "--"]
-            df1.replace(to_replace=null_values, value=pd.NA, inplace=True)
+            # Replace common placeholders with NaN
+            null_placeholders = ["", " ", "NA", "N/A", "null", "Null", "NaN", "-", "--"]
+            df1.replace(to_replace=null_placeholders, value=pd.NA, inplace=True)
 
             # Save cleaned data back to session
             st.session_state['df1'] = df1
@@ -201,10 +213,10 @@ def page2():
             missing_df = missing_df[missing_df["Missing Values"] > 0]
 
             if not missing_df.empty:
-                st.warning(f"Found {missing_df.shape[0]} columns with missing values.")
+                st.warning(f"⚠️ Found {missing_df.shape[0]} columns with missing values.")
                 st.dataframe(missing_df)
             else:
-                st.success("No missing values found!")
+                st.success("✅ No missing values found!")
 
         else:
             st.error("No dataset loaded. Please load the dataset first.")
@@ -327,12 +339,12 @@ def page3():
             with st.spinner("Training models... This may take sometime."):
                 
                 # Step 1: Impute missing values
-                imputer = SimpleImputer(strategy='mean')  # You can change to 'median' if needed
+                imputer = SimpleImputer(strategy='median')  # You can change to 'median' if needed
                 x_train_imputed = imputer.fit_transform(x_train)
                 x_test_imputed = imputer.transform(x_test)
 
                 # Step 2: Scale features for SVM
-                scaler = MinMaxScaler()
+                scaler = StandardScaler()
                 x_train_scaled = scaler.fit_transform(x_train_imputed)
                 x_test_scaled = scaler.transform(x_test_imputed)
 
@@ -680,11 +692,11 @@ def page5():
             
             with col1:
                 if prediction == 1:
-                    st.error("**❗HIGH RISK: Customer likely to CHURN**")
+                    st.error("**HIGH RISK: Customer likely to CHURN**")
                     risk_level = "HIGH"
                     risk_color = "#ff4444"
                 else:
-                    st.success("**✅ LOW RISK: Customer likely to STAY**")
+                    st.success("**LOW RISK: Customer likely to STAY**")
                     risk_level = "LOW"
                     risk_color = "#44ff44"
             
@@ -745,6 +757,8 @@ def page5():
     
     else:
         st.error("No trained models available. Please complete the model training step first.")
+    
+    
 
 
 def page6():
@@ -985,13 +999,111 @@ def page6():
     else:
         st.error("No data available for analysis. Please load your dataset first.")
 
+def page7():
+    st.subheader("Batch Prediction")
+    st.title("📡 Batch Customer Churn Prediction")
+
+    # -----------------------------
+    # 2. Load or Train Model
+    MODEL_PATH = "random_forest_churn_model.pkl"
+    PIPELINE_PATH = "preprocessing_pipeline.pkl"
+    
+    @st.cache_data
+    def load_training_data():
+        df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn.csv")
+        df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
+        df.dropna(inplace=True)
+        return df
+    
+    @st.cache_resource
+    def get_model_and_pipeline():
+        if os.path.exists(MODEL_PATH) and os.path.exists(PIPELINE_PATH):
+            model = joblib.load(MODEL_PATH)
+            pipeline = joblib.load(PIPELINE_PATH)
+            return model, pipeline
+    
+        st.warning("Training model because it doesn't exist...")
+    
+        df = load_training_data()
+        X = df.drop(columns=["customerID", "Churn"])
+        y = df["Churn"].map({"Yes": 1, "No": 0})
+    
+        # Preprocessing
+        numeric_features = ["tenure", "MonthlyCharges", "TotalCharges"]
+        categorical_features = X.select_dtypes(include="object").columns.tolist()
+    
+        preprocessor = ColumnTransformer(transformers=[
+            ("num", Pipeline([
+                ("imputer", SimpleImputer(strategy="median")),
+                ("scaler", StandardScaler())
+            ]), numeric_features),
+            ("cat", Pipeline([
+                ("imputer", SimpleImputer(strategy="most_frequent")),
+                ("encoder", OneHotEncoder(handle_unknown="ignore"))
+            ]), categorical_features)
+        ])
+    
+        # Full pipeline
+        pipeline = Pipeline(steps=[
+            ("preprocessor", preprocessor),
+        ])
+    
+        X_preprocessed = pipeline.fit_transform(X)
+        model = RandomForestClassifier()
+        model.fit(X_preprocessed, y)
+    
+        # Save for reuse
+        joblib.dump(model, MODEL_PATH)
+        joblib.dump(pipeline, PIPELINE_PATH)
+    
+        return model, pipeline
+    
+    model, pipeline = get_model_and_pipeline()
+    
+    # -----------------------------
+    # 3. Upload and Predict
+    uploaded_file = st.file_uploader("Upload a CSV file for prediction", type="csv")
+    
+    if uploaded_file:
+        user_df = pd.read_csv(uploaded_file)
+        st.write("📄 Uploaded Data Preview:", user_df.head())
+    
+        if "customerID" in user_df.columns:
+            ids = user_df["customerID"]
+            user_df = user_df.drop(columns=["customerID"])
+        else:
+            ids = pd.Series([f"ID-{i}" for i in range(len(user_df))])
+    
+        # Preprocess
+        X_user = pipeline.transform(user_df)
+    
+        # Predict
+        predictions = model.predict(X_user)
+        proba = model.predict_proba(X_user)[:, 1]
+    
+        # Return results
+        result_df = pd.DataFrame({
+            "CustomerID": ids,
+            "Churn_Prediction": ["Yes" if p == 1 else "No" for p in predictions],
+            "Churn_Probability": proba.round(3)
+        })
+    
+        st.success("✅ Predictions Completed")
+        st.dataframe(result_df)
+    
+        # Download button
+        csv = result_df.to_csv(index=False)
+        st.download_button("⬇️ Download Results as CSV", data=csv, file_name="churn_predictions.csv", mime="text/csv")
+
+
 pages = {
     'Home & Data Overview': page1,
     'Data Preprocessing': page2,
     'Model Training': page3,
     'Model Evaluation': page4,
     'Prediction Interface': page5,
-    'Insights & Conclusions': page6
+    'Insights & Conclusions': page6,
+    'Batch Prediction': page7
 }
 
 # creating the sidebar with selection box
