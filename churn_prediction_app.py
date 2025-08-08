@@ -45,7 +45,7 @@ st.set_page_config(
 #Joshua Kwaku Mensah - 22257672
 #""")
 st.write("scikit-learn version:", sklearn.__version__)
-print("Saved-with scikit-learn version:", sklearn.__version__)
+st.write("Saved-with scikit-learn version:", sklearn.__version__)
 Logo = Image.open("telco_logo.jpg")
 st.image(Logo, caption="", width=150)
 
