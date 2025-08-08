@@ -339,7 +339,7 @@ def page3():
             with st.spinner("Training models... This may take sometime."):
                 
                 # Step 1: Impute missing values
-                imputer = SimpleImputer(strategy='median')  # You can change to 'median' if needed
+                imputer = SimpleImputer(strategy='most_frequent')  # You can change to 'median' if needed
                 x_train_imputed = imputer.fit_transform(x_train)
                 x_test_imputed = imputer.transform(x_test)
 
