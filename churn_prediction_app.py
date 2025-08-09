@@ -197,7 +197,7 @@ def page2():
 
             # Replace common placeholders with NaN
             null_placeholders = ["", " ", "NA", "N/A", "null", "Null", "NaN", "-", "--"]
-            df1.replace(to_replace=null_placeholders, value=pd.nan, inplace=True)
+            df1.replace(to_replace=null_placeholders, value=np.nan, inplace=True)
 
             # Save cleaned data back to session
             st.session_state['df1'] = df1
