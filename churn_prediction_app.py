@@ -252,7 +252,7 @@ def page2():
                 st.markdown("### Preprocessing Summary:")
                 st.write("1. Converted TotalCharges to numeric format")
                 st.write("2. Handled missing values(if any) using median imputation")
-                st.write("3. Applied Label Encoding to categorical variables")
+                st.write("3. Applied OneHot Encoding to categorical variables")
 
             # Display processed data if available
             if st.session_state.processed_data is not None:
