@@ -236,7 +236,7 @@ def page1():
         st.metric("Churn Rate", f"{churn_rate:.1f}%")
 
     if st.checkbox('Preview Dataset'):
-        st.write(df1)
+        st.write(df1.head(10))
     
     if st.checkbox("###  Summary Statistics"):
         num_columns=df1[['tenure','MonthlyCharges']]
