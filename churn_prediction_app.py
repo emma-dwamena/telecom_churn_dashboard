@@ -3,8 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 # Plotly defaults for a cohesive professional look (UI-only)
-px.defaults.template = 'plotly_white'
-px.defaults.colorway = ['#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6','#14b8a6']
+try:
+    px.defaults.template = 'plotly_white'
+    px.defaults.color_discrete_sequence = ['#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6','#14b8a6']
+except Exception:
+    pass
 import plotly.graph_objects as go
 import streamlit as st
 import sklearn
