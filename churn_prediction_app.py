@@ -1082,13 +1082,15 @@ if upload_file is not None:
             proba = model.predict_proba(X_user)[:, 1]
     
             # Return results
+            # Return results
             result_df = pd.DataFrame({
                 "CustomerID": ids,
                 "Churn_Prediction": ["Yes" if p == 1 else "No" for p in predictions],
                 "Churn_Probability": proba.round(3)
-        
             })
 
+            # Persist for later analysis within this session
+            st.session_state['batch_result_df'] = result_df
             # ---- Risk Tiering & Distribution (Low/Medium/High) ----
             st.markdown("### Risk Tiering")
             low_high = st.slider(
@@ -1114,8 +1116,6 @@ if upload_file is not None:
             # Distribution among customers predicted to churn
             churn_yes_df = result_df[result_df["Churn_Prediction"] == "Yes"]
             churn_counts = churn_yes_df["Risk_Tier"].value_counts().reindex(order, fill_value=0)
-
-            c1, c2, c3 = st.columns(3)
             c1, c2, c3 = st.columns(3)
             with c1:
                 st.metric("Predicted Churn — High Risk", int(churn_counts.get("High", 0)))
@@ -1123,7 +1123,6 @@ if upload_file is not None:
                 st.metric("Predicted Churn — Medium Risk", int(churn_counts.get("Medium", 0)))
             with c3:
                 st.metric("Predicted Churn — Low Risk", int(churn_counts.get("Low", 0)))
-            with c3:
                 st.metric("Predicted Churn — Low Risk", int(churn_counts.get("Low", 0)))
 
             st.markdown("#### Distribution (All Customers)")
@@ -1140,8 +1139,9 @@ if upload_file is not None:
                 st.plotly_chart(fig_churn, use_container_width=True)
             else:
                 st.info("No customers predicted to churn with the current model/thresholds.")
-    # ---- Simple Analysis on Batch Predictions ----
-    try:
+        # ---- Simple Analysis on Batch Predictions ----
+    if "batch_result_df" in st.session_state:
+        result_df = st.session_state["batch_result_df"]
         st.markdown("### Simple Analysis")
         total_n = len(result_df)
         churn_n = int((result_df["Churn_Prediction"] == "Yes").sum())
@@ -1155,22 +1155,14 @@ if upload_file is not None:
         with m3:
             st.metric("Predicted Churn Rate", f"{churn_rate:.1f}%")
 
-        # Enrich uploaded data with predictions (for quick group analysis)
-        enriched = user_df.copy()
-        enriched["Churn_Prediction"] = result_df["Churn_Prediction"].values
-        enriched["Churn_Probability"] = result_df["Churn_Probability"].values
-        enriched["Risk_Tier"] = result_df["Risk_Tier"].values
-        if "CustomerID" in result_df.columns and "customerID" not in enriched.columns:
-            enriched["customerID"] = result_df["CustomerID"]
-
         # Top at-risk customers (if we have identifiers)
         if "CustomerID" in result_df.columns:
             top_at_risk = (result_df.sort_values("Churn_Probability", ascending=False)
                              .head(10)[["CustomerID", "Churn_Prediction", "Churn_Probability", "Risk_Tier"]])
             st.markdown("#### Top 10 Highest-Risk Customers")
             st.dataframe(top_at_risk, use_container_width=True)
-    except NameError:
-        st.info("Run predictions first to see analysis.")
+    else:
+        st.info("Run batch predictions first to see analysis.")
         st.markdown("### Predictions with Risk Tiers (Top 20 by probability)")
         st.dataframe(result_df.sort_values("Churn_Probability", ascending=False).head(20))
         st.success("✅ Predictions Completed")
