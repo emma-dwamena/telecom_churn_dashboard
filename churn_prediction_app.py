@@ -39,241 +39,201 @@ st.set_page_config(
 # Professional CSS styling with dark theme
 st.markdown("""
 <style>
-/* ---------- Dark palette tokens ---------- */
+/* =========================================================
+   Professional Dark Theme for Streamlit
+   - Consistent tokens
+   - Subtle depth, high contrast
+   - Accessible focus states
+   ======================================================= */
+
+/* -------- Design tokens -------- */
 :root{
-  --bg:#0b0f1a;          /* app background */
-  --panel:#0f172a;       /* panels / cards */
-  --panel-2:#111827;     /* hovered panels */
-  --text:#e5e7eb;        /* primary text */
-  --muted:#94a3b8;       /* secondary text */
-  --border:#1f2937;      /* borders */
-  --accent:#6366f1;      /* indigo */
-  --accent-2:#8b5cf6;    /* violet */
-  --success:#16a34a;
-  --danger:#ef4444;
-  --warn:#f59e0b;
-  --info:#3b82f6;
+  --bg: #0b0f19;          /* app background */
+  --surface-1: #0f172a;   /* panels/cards */
+  --surface-2: #111827;   /* hover state */
+  --text: #e5e7eb;        /* primary text */
+  --muted: #9ca3af;       /* secondary text */
+  --border: #1f2937;      /* borders */
+  --brand: #6366f1;       /* primary */
+  --brand-strong: #4f46e5;
+  --shadow: 0 8px 24px rgba(0,0,0,.45);
+  --radius: 12px;
 }
 
-/* Base */
-.main, .stApp{
-  padding: 0rem 1rem;
-  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background-color: var(--bg) !important;
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* -------- Base app -------- */
+html, body, .stApp{
+  background: var(--bg) !important;
   color: var(--text) !important;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+.block-container{ padding: 0 1rem !important; }
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: no-preference){
+  *{ transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
 }
 
-/* Header */
+/* -------- Header -------- */
 .main-header{
-  background: linear-gradient(135deg, #0b1220 0%, #141a2a 100%);
-  padding: 2.5rem;
-  border-radius: 12px;
+  background: var(--surface-1);
+  padding: 2rem;
+  border-radius: var(--radius);
   margin-bottom: 2rem;
   color: var(--text);
   text-align: center;
-  box-shadow: 0 10px 36px rgba(0,0,0,.55);
   border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
+.main-header h1{ margin: 0 0 .25rem 0; font-weight: 700; }
+.main-header h3{ margin: 0; font-weight: 500; color: var(--muted); }
 
-/* Nav container */
+/* -------- Navigation container (optional wrapper) -------- */
 .nav-container{
-  background: linear-gradient(90deg, #0e1424 0%, #141a2a 100%);
+  background: var(--surface-1);
   padding: 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius);
   margin-bottom: 2rem;
-  box-shadow: 0 6px 24px rgba(0,0,0,.45);
   border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
-/* Buttons (Streamlit) */
+/* -------- Buttons -------- */
 .stButton > button{
-  font-weight: 500;
-  transition: all .25s ease;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--surface-1), var(--surface-2));
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: .7rem 1.2rem;
-  margin: .2rem;
-  font-size: .95rem;
-  color: var(--text);
-  background: linear-gradient(135deg, #1b1c2e, #242640);
+  padding: .7rem 1.1rem;
+  font-weight: 600;
   box-shadow: 0 4px 14px rgba(0,0,0,.35);
 }
 .stButton > button:hover{
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #232648, #2b2f58);
-  border-color: #2b2f58;
-  box-shadow: 0 10px 26px rgba(0,0,0,.5), 0 0 0 1px rgba(99,102,241,.15) inset;
+  background: var(--surface-2);
+  border-color: #2b3447;
+}
+.stButton > button:focus-visible{
+  outline: 3px solid rgba(99,102,241,.45);
+  outline-offset: 1px;
 }
 
-/* Optional “accented” first few buttons */
-.stButton > button:nth-child(1){
-  background: linear-gradient(135deg, #1e1b4b, #3730a3);
-  border-color:#3730a3;
-}
-.stButton > button:nth-child(2){
-  background: linear-gradient(135deg, #3a0d1f, #7e1d3a);
-  border-color:#7e1d3a;
-}
-.stButton > button:nth-child(3){
-  background: linear-gradient(135deg, #052231, #0b5a6a);
-  border-color:#0b5a6a;
-}
-
-/* Tabs */
+/* -------- Tabs -------- */
 .stTabs [data-baseweb="tab-list"]{
   gap: 6px;
-  background: #0b1220;
+  background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: .5rem;
+  padding: .4rem;
 }
 .stTabs [data-baseweb="tab"]{
-  background: #0f172a;
+  background: transparent;
   color: var(--text);
   border-radius: 8px;
-  padding: .8rem 1.25rem;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  transition: all .2s ease;
+  padding: .75rem 1.25rem;
+  font-weight: 600;
+  border: 1px solid transparent;
 }
 .stTabs [data-baseweb="tab"]:hover{
-  background: #111b34;
-  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  background: var(--surface-2);
 }
 .stTabs [aria-selected="true"]{
-  background: linear-gradient(135deg, #4338ca, #6d28d9) !important;
-  color: #fff !important;
-  box-shadow: 0 6px 20px rgba(99,102,241,.35);
-  border-color: transparent !important;
+  background: var(--surface-2) !important;
+  border-color: #2b3447 !important;
+  box-shadow: inset 0 -2px 0 var(--brand);
 }
 
-/* Metric cards */
-.metric-card{
-  background: linear-gradient(135deg, #0f172a 0%, #141a2a 100%);
-  padding: 1.8rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 26px rgba(0,0,0,.45);
-  border: 1px solid var(--border);
-  margin: 1rem 0;
+/* -------- Cards (metrics, team, insights) -------- */
+.metric-card, .team-card, .insight-box{
+  background: var(--surface-1);
   color: var(--text);
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  padding: 1.6rem;
+  border-radius: var(--radius);
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
-.metric-card:hover{
-  transform: translateY(-3px);
-  box-shadow: 0 14px 36px rgba(0,0,0,.55);
-  border-color: #303a63;
-}
+.insight-box{ border-left: 4px solid var(--brand); }
 
-/* Inputs */
+/* -------- Inputs -------- */
 .stSelectbox > div > div,
 .stNumberInput > div > div > input{
-  background-color: var(--panel) !important;
+  background: var(--surface-1) !important;
   border: 1px solid var(--border) !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   color: var(--text) !important;
 }
 
-/* ---------- File uploader (Streamlit-specific) ---------- */
-[data-testid="stFileUploaderDropzone"]{
-  background: var(--panel) !important;
-  border: 2px dashed var(--accent) !important;
-  border-radius: 12px !important;
-  color: var(--text) !important;
-  box-shadow: 0 6px 22px rgba(0,0,0,.45);
+/* -------- File uploader (Streamlit built-in) -------- */
+[data-testid="stFileUploader"] > section{
+  padding: 0 !important; /* tighter */
 }
-[data-testid="stFileUploaderDropzone"] *{
+[data-testid="stFileUploaderDropzone"]{
+  background: var(--surface-1) !important;
+  border: 2px dashed var(--brand) !important;
+  border-radius: var(--radius) !important;
   color: var(--text) !important;
+  box-shadow: var(--shadow);
 }
 [data-testid="stFileUploaderDropzone"]:hover{
-  background: var(--panel-2) !important;
-  border-color: #a5b4fc !important; /* lighter indigo */
-  box-shadow: 0 12px 30px rgba(0,0,0,.6);
+  background: var(--surface-2) !important;
+  border-color: var(--brand-strong) !important;
 }
-[data-testid="stFileUploader"] label{
-  color: var(--muted) !important;
-}
+[data-testid="stFileUploader"] label,
 [data-testid="stFileUploader"] small{
   color: var(--muted) !important;
 }
 
-/* Alerts */
+/* -------- Alerts (custom classes you use) -------- */
 .stSuccess{
-  background: linear-gradient(90deg, rgba(22,163,74,.25), rgba(16,185,129,.25));
-  border: 1px solid rgba(16,185,129,.55);
-  color: #dcfce7;
-  border-radius: 8px;
+  background: rgba(16,185,129,.15);
+  border: 1px solid rgba(16,185,129,.5);
+  color: #d1fae5;
+  border-radius: 10px;
+  padding: .9rem 1rem;
 }
 .stError{
-  background: linear-gradient(90deg, rgba(239,68,68,.25), rgba(220,38,38,.25));
-  border: 1px solid rgba(239,68,68,.55);
+  background: rgba(239,68,68,.15);
+  border: 1px solid rgba(239,68,68,.5);
   color: #fee2e2;
-  border-radius: 8px;
+  border-radius: 10px;
+  padding: .9rem 1rem;
 }
 .stWarning{
-  background: linear-gradient(90deg, rgba(245,158,11,.22), rgba(217,119,6,.22));
+  background: rgba(245,158,11,.15);
   border: 1px solid rgba(245,158,11,.5);
-  color: #fff7ed;
-  border-radius: 8px;
+  color: #ffedd5;
+  border-radius: 10px;
+  padding: .9rem 1rem;
 }
 .stInfo{
-  background: linear-gradient(90deg, rgba(59,130,246,.22), rgba(37,99,235,.22));
+  background: rgba(59,130,246,.15);
   border: 1px solid rgba(59,130,246,.5);
   color: #dbeafe;
-  border-radius: 8px;
+  border-radius: 10px;
+  padding: .9rem 1rem;
 }
 
-/* Team + Insight boxes */
-.team-card,
-.insight-box{
-  background: linear-gradient(135deg, #0f172a 0%, #141a2a 100%);
-  color: var(--text);
-  padding: 2rem;
-  border-radius: 12px;
-  margin: 1rem 0;
-  box-shadow: 0 10px 32px rgba(0,0,0,.5);
-  border: 1px solid var(--border);
-}
-.insight-box{ border-left: 4px solid var(--accent); }
-
-/* Status boxes */
-.status-high{
-  background: linear-gradient(135deg, #3b0b0b, #551a1a);
-  color: #fecaca;
-  padding: 2rem; border-radius: 12px; text-align: center;
-  box-shadow: 0 8px 28px rgba(239,68,68,.25);
-  border: 1px solid rgba(239,68,68,.5);
-}
-.status-low{
-  background: linear-gradient(135deg, #0d2b1a, #14422a);
-  color: #bbf7d0;
-  padding: 2rem; border-radius: 12px; text-align: center;
-  box-shadow: 0 8px 28px rgba(34,197,94,.25);
-  border: 1px solid rgba(34,197,94,.5);
-}
-
-/* Tables */
+/* -------- Tables -------- */
 .dataframe{
-  background-color: var(--panel) !important;
+  background: var(--surface-1) !important;
   color: var(--text) !important;
   border: 1px solid var(--border) !important;
-  box-shadow: 0 6px 22px rgba(0,0,0,.45);
+  box-shadow: var(--shadow);
   border-radius: 10px !important;
 }
 
-/* Expanders */
+/* -------- Expanders -------- */
 .streamlit-expanderHeader{
-  background: linear-gradient(90deg, #0f172a, #141a2a) !important;
+  background: var(--surface-1) !important;
   color: var(--text) !important;
   border: 1px solid var(--border) !important;
   border-radius: 10px !important;
   font-weight: 600 !important;
   padding: 1rem !important;
-  transition: all .2s ease !important;
 }
-.streamlit-expanderHeader:hover{
-  background: linear-gradient(90deg, #1a2040, #232a4e) !important;
-  box-shadow: 0 8px 22px rgba(99,102,241,.25);
-}
+.streamlit-expanderHeader:hover{ background: var(--surface-2) !important; }
 .streamlit-expanderContent{
   background: #0c1324 !important;
   border: 1px solid var(--border) !important;
@@ -282,24 +242,25 @@ st.markdown("""
   color: var(--text) !important;
 }
 
-/* Global text */
+/* -------- Typography -------- */
 .stMarkdown, .stText, p, div, span{ color: var(--text) !important; }
-h1, h2, h3, h4, h5, h6{ color: #ffffff !important; }
+h1, h2, h3, h4, h5, h6{ color: #fff !important; }
 
-/* Hide Streamlit chrome */
+/* -------- Hide Streamlit chrome (optional) -------- */
 #MainMenu{visibility:hidden;}
 footer{visibility:hidden;}
 header{visibility:hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-# Header (unchanged content, now sits on darker background)
+# Header
 st.markdown("""
 <div class="main-header">
   <h1>Customer Churn Prediction Dashboard</h1>
   <h3>Advanced Analytics for Customer Retention</h3>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 # Initialize session state
