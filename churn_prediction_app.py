@@ -1055,7 +1055,7 @@ def page7():
         return model, pipeline
     
     model, pipeline = get_model_and_pipeline()
-    
+
     # -----------------------------
     # 3. Upload and Predict
     uploaded_file = st.file_uploader("Upload a CSV file for prediction", type="csv")
@@ -1063,43 +1063,45 @@ def page7():
     if uploaded_file:
         user_df = pd.read_csv(uploaded_file)
         st.write("📄 Uploaded Data Preview:", user_df.head())
-    
-        if "customerID" in user_df.columns:
-            ids = user_df["customerID"]
-            user_df = user_df.drop(columns=["customerID"])
-        else:
-            ids = pd.Series([f"ID-{i}" for i in range(len(user_df))])
-    
-        # Preprocess
-        X_user = pipeline.transform(user_df)
-    
-        # Predict
-        predictions = model.predict(X_user)
-        proba = model.predict_proba(X_user)[:, 1]
-    
-        # Return results
-        result_df = pd.DataFrame({
-            "CustomerID": ids,
-            "Churn_Prediction": ["Yes" if p == 1 else "No" for p in predictions],
-            "Churn_Probability": proba.round(3)
-        })
-    
-        st.success("✅ Predictions Completed")
-        st.dataframe(result_df)
-    
         
-
-        # --- Pie chart: Predicted churn status (Yes/No) ---
-        st.markdown("### Predicted Churn Status — Distribution")
-        _status_counts = result_df["Churn_Prediction"].value_counts().reindex(["Yes", "No"]).fillna(0).astype(int)
-        _pie_df = _status_counts.reset_index()
-        _pie_df.columns = ["Status", "Count"]
-        fig_pred_pie = px.pie(_pie_df, values="Count", names="Status", title="Predicted Churn Status", hole=0.3)
-        st.plotly_chart(fig_pred_pie, use_container_width=True)
-# Download button
-        csv = result_df.to_csv(index=False)
-        st.download_button("⬇️ Download Results as CSV", data=csv, file_name="churn_predictions.csv", mime="text/csv")
-
+        predict_clicked = st.button("Predict Churn", type="primary")
+        if predict_clicked:
+            if "customerID" in user_df.columns:
+                ids = user_df["customerID"]
+                user_df = user_df.drop(columns=["customerID"])
+            else:
+                ids = pd.Series([f"ID-{i}" for i in range(len(user_df))])
+    
+            # Preprocess
+            X_user = pipeline.transform(user_df)
+    
+            # Predict
+            predictions = model.predict(X_user)
+            proba = model.predict_proba(X_user)[:, 1]
+    
+            # Return results
+            result_df = pd.DataFrame({
+                "CustomerID": ids,
+                "Churn_Prediction": ["Yes" if p == 1 else "No" for p in predictions],
+                "Churn_Probability": proba.round(3)
+            })
+    
+            st.success("✅ Predictions Completed")
+            st.dataframe(result_df)
+    
+            # --- Pie chart: Predicted churn status (Yes/No) ---
+            st.markdown("### Predicted Churn Status — Distribution")
+            _status_counts = result_df["Churn_Prediction"].value_counts().reindex(["Yes", "No"]).fillna(0).astype(int)
+            _pie_df = _status_counts.reset_index()
+            _pie_df.columns = ["Status", "Count"]
+            fig_pred_pie = px.pie(_pie_df, values="Count", names="Status", title="Predicted Churn Status", hole=0.3)
+            st.plotly_chart(fig_pred_pie, use_container_width=True)
+    
+            # Download button
+            csv = result_df.to_csv(index=False)
+            st.download_button("⬇️ Download Results as CSV", data=csv, file_name="churn_predictions.csv", mime="text/csv")
+        else:
+            st.info("Click **Predict Churn** to generate predictions.")
 
 
 def page_about():
