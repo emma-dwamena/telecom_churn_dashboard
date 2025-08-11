@@ -189,14 +189,30 @@ st.markdown("""
     }
     
     /* File uploader styling - dark theme */
-    .uploadedFile {
-        border: 2px dashed #667eea;
-        border-radius: 8px;
-        padding: 2rem;
-        text-align: center;
-        background: #6f66ea;
-        color: blue;
-    }
+.uploadedFile {
+    border: 2px dashed #667eea;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    background: #6f66ea;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Hover effect */
+.uploadedFile:hover {
+    background: #5a52d6;
+    border-color: #9aa0ff;
+}
+
+/* Drag-over effect */
+.uploadedFile.dragover {
+    background: #4b42c4;
+    border-color: #c3c8ff;
+}
     
     /* Alert styling - dark theme */
     .stSuccess {
