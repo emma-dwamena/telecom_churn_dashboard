@@ -1133,7 +1133,86 @@ def page7():
                              labels={"x": "Risk Tier", "y": "Count"},
                              title="Risk Distribution — All Customers")
         st.plotly_chart(fig_overall, use_container_width=True)
-    
+
+        st.markdown("#### Distribution (Customers Predicted to Churn)")
+        if len(churn_yes_df) > 0:
+            fig_churn = px.bar(x=churn_counts.index, y=churn_counts.values,
+                               labels={"x": "Risk Tier", "y": "Count"},
+                               title="Risk Distribution — Predicted Churn Only")
+            st.plotly_chart(fig_churn, use_container_width=True)
+        else:
+            st.info("No customers predicted to churn with the current model/thresholds.")
+# ---- Simple Analysis on Batch Predictions ----
+st.markdown("### Simple Analysis")
+total_n = len(result_df)
+churn_n = int((result_df["Churn_Prediction"] == "Yes").sum())
+churn_rate = (churn_n / total_n) * 100 if total_n else 0.0
+
+m1, m2, m3 = st.columns(3)
+with m1:
+    st.metric("Rows Scored", total_n)
+with m2:
+    st.metric("Predicted to Churn", churn_n)
+with m3:
+    st.metric("Predicted Churn Rate", f"{churn_rate:.1f}%")
+
+# Enrich uploaded data with predictions (for quick group analysis)
+enriched = user_df.copy()
+enriched["Churn_Prediction"] = result_df["Churn_Prediction"].values
+enriched["Churn_Probability"] = result_df["Churn_Probability"].values
+enriched["Risk_Tier"] = result_df["Risk_Tier"].values
+if "CustomerID" in result_df.columns and "customerID" not in enriched.columns:
+    enriched["customerID"] = result_df["CustomerID"]
+
+# Helper: safe bar plot
+def _bar(df, x, y, title, ylab):
+    if df.empty:
+        st.info(f"No data available to plot: {title}")
+        return
+    fig = px.bar(df, x=x, y=y, title=title, labels={x: x, y: ylab})
+    st.plotly_chart(fig, use_container_width=True)
+
+# A) Average churn probability by Contract (if available)
+if "Contract" in enriched.columns:
+    g = (enriched.groupby("Contract")["Churn_Probability"].mean()
+                 .sort_values(ascending=False)
+                 .reset_index(name="Avg_Probability"))
+    _bar(g, "Contract", "Avg_Probability", "Avg. Churn Probability by Contract", "Avg Probability")
+
+# B) Average churn probability by Tenure band (if available)
+if "tenure" in enriched.columns:
+    try:
+        bins = [0, 6, 12, 24, 48, 1000]
+        labels = ["0–6", "7–12", "13–24", "25–48", "49+"]
+        enriched["Tenure_Band"] = pd.cut(enriched["tenure"], bins=bins, labels=labels, right=True)
+        g2 = (enriched.groupby("Tenure_Band")["Churn_Probability"].mean()
+                      .reset_index(name="Avg_Probability"))
+        _bar(g2, "Tenure_Band", "Avg_Probability", "Avg. Churn Probability by Tenure Band", "Avg Probability")
+    except Exception as _:
+        pass
+
+# C) Average churn probability by MonthlyCharges quartile (if available)
+if "MonthlyCharges" in enriched.columns:
+    try:
+        enriched["Monthly_Q"] = pd.qcut(enriched["MonthlyCharges"], q=4, duplicates="drop")
+        g3 = (enriched.groupby("Monthly_Q")["Churn_Probability"].mean()
+                      .reset_index(name="Avg_Probability"))
+        _bar(g3, "Monthly_Q", "Avg_Probability", "Avg. Churn Probability by Monthly Charges Quartile", "Avg Probability")
+    except Exception as _:
+        pass
+
+        # Top at-risk customers (if we have identifiers)
+        if "CustomerID" in result_df.columns:
+            top_at_risk = (result_df.sort_values("Churn_Probability", ascending=False)
+                             .head(10)[["CustomerID", "Churn_Prediction", "Churn_Probability", "Risk_Tier"]])
+            st.markdown("#### Top 10 Highest-Risk Customers")
+            st.dataframe(top_at_risk, use_container_width=True)
+        
+        st.markdown("### Predictions with Risk Tiers (Top 20 by probability)")
+        st.dataframe(result_df.sort_values("Churn_Probability", ascending=False).head(20))
+        st.success("✅ Predictions Completed")
+        st.dataframe(result_df)
+            
         # Download button
         csv = result_df.to_csv(index=False)
         st.download_button("⬇️ Download Results as CSV", data=csv, file_name="churn_predictions.csv", mime="text/csv")
