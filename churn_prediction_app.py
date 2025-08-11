@@ -39,318 +39,268 @@ st.set_page_config(
 # Professional CSS styling with dark theme
 st.markdown("""
 <style>
-    /* Import professional font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    /* Dark theme base */
-    .main {
-        padding: 0rem 1rem;
-        font-family: 'Inter', sans-serif;
-        background-color: #1a1a1a;
-        color: #ffffff;
-    }
-    
-    /* Dark theme for streamlit elements */
-    .stApp {
-        background-color: #1a1a1a;
-        color: #ffffff;
-    }
-    
-    /* Header styling - dark theme */
-    .main-header {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-        padding: 2.5rem;
-        border-radius: 12px;
-        margin-bottom: 2rem;
-        color: white;
-        text-align: center;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        border: 1px solid #4a5568;
-    }
-    
-    /* Navigation styling - dark theme */
-    .nav-container {
-        background: linear-gradient(90deg, #2d3748 0%, #4a5568 100%);
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        border: 1px solid #4a5568;
-    }
-    
-    /* Enhanced navigation buttons with different colors */
-    .stButton > button {
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
-        border: none;
-        border-radius: 8px;
-        padding: 0.7rem 1.5rem;
-        margin: 0.2rem;
-        font-size: 0.9rem;
-    }
-    
-    /* Different colors for navigation buttons */
-    .stButton > button:nth-child(1) {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(2) {
-        background: linear-gradient(135deg, #f093fb, #f5576c);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(3) {
-        background: linear-gradient(135deg, #4facfe, #00f2fe);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(4) {
-        background: linear-gradient(135deg, #43e97b, #38f9d7);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(5) {
-        background: linear-gradient(135deg, #fa709a, #fee140);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(6) {
-        background: linear-gradient(135deg, #a8edea, #fed6e3);
-        color: #2d3748;
-    }
-    
-    .stButton > button:nth-child(7) {
-        background: linear-gradient(135deg, #ffecd2, #fcb69f);
-        color: #2d3748;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    }
-    
-    /* Enhanced tab styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2px;
-        background: #2d3748;
-        border-radius: 8px;
-        padding: 0.5rem;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        background: linear-gradient(135deg, #4a5568, #2d3748);
-        color: white;
-        border-radius: 6px;
-        padding: 0.8rem 1.5rem;
-        font-weight: 500;
-        border: 1px solid #4a5568;
-        transition: all 0.3s ease;
-    }
-    
-    .stTabs [data-baseweb="tab"]:hover {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-    
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea, #764ba2) !important;
-        color: white !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
-    
-    /* Dark theme metric cards */
-    .metric-card {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-        padding: 1.8rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        border: 1px solid #4a5568;
-        margin: 1rem 0;
-        transition: transform 0.2s ease;
-        color: white;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-        border: 1px solid #667eea;
-    }
-    
-    /* Form styling - dark theme */
-    .stSelectbox > div > div, .stNumberInput > div > div > input {
-        background-color: #2d3748 !important;
-        border: 1px solid #4a5568 !important;
-        border-radius: 6px;
-        font-family: 'Inter', sans-serif;
-        color: white !important;
-    }
-    
-/* File uploader styling - dark theme */
-.uploadedFile {
-    border: 2px dashed #667eea;
-    border-radius: 8px;
-    padding: 2rem;
-    text-align: center;
-    background: #1e1e2f; /* Dark background */
-    color: #e0e0e0; /* Light text */
-    font-family: Arial, sans-serif;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
+/* ---------- Dark palette tokens ---------- */
+:root{
+  --bg:#0b0f1a;          /* app background */
+  --panel:#0f172a;       /* panels / cards */
+  --panel-2:#111827;     /* hovered panels */
+  --text:#e5e7eb;        /* primary text */
+  --muted:#94a3b8;       /* secondary text */
+  --border:#1f2937;      /* borders */
+  --accent:#6366f1;      /* indigo */
+  --accent-2:#8b5cf6;    /* violet */
+  --success:#16a34a;
+  --danger:#ef4444;
+  --warn:#f59e0b;
+  --info:#3b82f6;
 }
 
-/* Placeholder text (drag and drop) */
-.uploadedFile p {
-    color: #a0a0b2; /* Softer text for placeholder */
-    margin: 0;
+/* Base */
+.main, .stApp{
+  padding: 0rem 1rem;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
 }
 
-/* Hover effect */
-.uploadedFile:hover {
-    background: #2a2a40;
-    border-color: #9aa0ff;
+/* Header */
+.main-header{
+  background: linear-gradient(135deg, #0b1220 0%, #141a2a 100%);
+  padding: 2.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  color: var(--text);
+  text-align: center;
+  box-shadow: 0 10px 36px rgba(0,0,0,.55);
+  border: 1px solid var(--border);
 }
 
-/* Drag-over effect */
-.uploadedFile.dragover {
-    background: #333356;
-    border-color: #c3c8ff;
+/* Nav container */
+.nav-container{
+  background: linear-gradient(90deg, #0e1424 0%, #141a2a 100%);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  box-shadow: 0 6px 24px rgba(0,0,0,.45);
+  border: 1px solid var(--border);
 }
-    
-    /* Alert styling - dark theme */
-    .stSuccess {
-        background: linear-gradient(90deg, #48bb78, #38a169);
-        border-radius: 6px;
-        color: white;
-        border: 1px solid #48bb78;
-    }
-    
-    .stError {
-        background: linear-gradient(90deg, #f56565, #e53e3e);
-        border-radius: 6px;
-        color: white;
-        border: 1px solid #f56565;
-    }
-    
-    .stWarning {
-        background: linear-gradient(90deg, #ed8936, #dd6b20);
-        border-radius: 6px;
-        color: white;
-        border: 1px solid #ed8936;
-    }
-    
-    .stInfo {
-        background: linear-gradient(90deg, #4299e1, #3182ce);
-        border-radius: 6px;
-        color: white;
-        border: 1px solid #4299e1;
-    }
-    
-    /* Team member card - dark theme */
-    .team-card {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-        color: white;
-        padding: 2.5rem;
-        border-radius: 12px;
-        margin: 1rem 0;
-        text-align: center;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        border: 1px solid #4a5568;
-    }
-    
-    /* Dark theme insight boxes */
-    .insight-box {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-        padding: 1.8rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-        border-left: 4px solid #667eea;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        color: white;
-        border: 1px solid #4a5568;
-    }
-    
-    /* Status boxes - dark theme */
-    .status-high {
-        background: linear-gradient(135deg, #f56565, #e53e3e);
-        color: white;
-        padding: 2rem;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 6px 25px rgba(245, 101, 101, 0.4);
-        border: 1px solid #f56565;
-    }
-    
-    .status-low {
-        background: linear-gradient(135deg, #48bb78, #38a169);
-        color: white;
-        padding: 2rem;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 6px 25px rgba(72, 187, 120, 0.4);
-        border: 1px solid #48bb78;
-    }
-    
-    /* Dark theme table styling */
-    .dataframe {
-        background-color: #2d3748 !important;
-        color: white !important;
-        border: 1px solid #4a5568 !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
-    }
-    
-    /* Expander styling - dark theme */
-    .streamlit-expanderHeader {
-        background: linear-gradient(90deg, #2d3748, #4a5568) !important;
-        color: white !important;
-        border: 1px solid #4a5568 !important;
-        border-radius: 8px !important;
-        font-weight: 600 !important;
-        padding: 1rem !important;
-        transition: all 0.3s ease !important;
-    }
-    
-    .streamlit-expanderHeader:hover {
-        background: linear-gradient(90deg, #667eea, #764ba2) !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-    
-    .streamlit-expanderContent {
-        background: #1a202c !important;
-        border: 1px solid #4a5568 !important;
-        border-top: none !important;
-        border-radius: 0 0 8px 8px !important;
-        color: white !important;
-    }
-    
-    /* Text styling for dark theme */
-    .stMarkdown, .stText, p, div, span {
-        color: #ffffff !important;
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        color: #ffffff !important;
-    }
-    
-    /* Hide streamlit elements */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
+
+/* Buttons (Streamlit) */
+.stButton > button{
+  font-weight: 500;
+  transition: all .25s ease;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .7rem 1.2rem;
+  margin: .2rem;
+  font-size: .95rem;
+  color: var(--text);
+  background: linear-gradient(135deg, #1b1c2e, #242640);
+  box-shadow: 0 4px 14px rgba(0,0,0,.35);
+}
+.stButton > button:hover{
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #232648, #2b2f58);
+  border-color: #2b2f58;
+  box-shadow: 0 10px 26px rgba(0,0,0,.5), 0 0 0 1px rgba(99,102,241,.15) inset;
+}
+
+/* Optional “accented” first few buttons */
+.stButton > button:nth-child(1){
+  background: linear-gradient(135deg, #1e1b4b, #3730a3);
+  border-color:#3730a3;
+}
+.stButton > button:nth-child(2){
+  background: linear-gradient(135deg, #3a0d1f, #7e1d3a);
+  border-color:#7e1d3a;
+}
+.stButton > button:nth-child(3){
+  background: linear-gradient(135deg, #052231, #0b5a6a);
+  border-color:#0b5a6a;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"]{
+  gap: 6px;
+  background: #0b1220;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .5rem;
+}
+.stTabs [data-baseweb="tab"]{
+  background: #0f172a;
+  color: var(--text);
+  border-radius: 8px;
+  padding: .8rem 1.25rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  transition: all .2s ease;
+}
+.stTabs [data-baseweb="tab"]:hover{
+  background: #111b34;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+.stTabs [aria-selected="true"]{
+  background: linear-gradient(135deg, #4338ca, #6d28d9) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 20px rgba(99,102,241,.35);
+  border-color: transparent !important;
+}
+
+/* Metric cards */
+.metric-card{
+  background: linear-gradient(135deg, #0f172a 0%, #141a2a 100%);
+  padding: 1.8rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 26px rgba(0,0,0,.45);
+  border: 1px solid var(--border);
+  margin: 1rem 0;
+  color: var(--text);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.metric-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0,0,0,.55);
+  border-color: #303a63;
+}
+
+/* Inputs */
+.stSelectbox > div > div,
+.stNumberInput > div > div > input{
+  background-color: var(--panel) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--text) !important;
+}
+
+/* ---------- File uploader (Streamlit-specific) ---------- */
+[data-testid="stFileUploaderDropzone"]{
+  background: var(--panel) !important;
+  border: 2px dashed var(--accent) !important;
+  border-radius: 12px !important;
+  color: var(--text) !important;
+  box-shadow: 0 6px 22px rgba(0,0,0,.45);
+}
+[data-testid="stFileUploaderDropzone"] *{
+  color: var(--text) !important;
+}
+[data-testid="stFileUploaderDropzone"]:hover{
+  background: var(--panel-2) !important;
+  border-color: #a5b4fc !important; /* lighter indigo */
+  box-shadow: 0 12px 30px rgba(0,0,0,.6);
+}
+[data-testid="stFileUploader"] label{
+  color: var(--muted) !important;
+}
+[data-testid="stFileUploader"] small{
+  color: var(--muted) !important;
+}
+
+/* Alerts */
+.stSuccess{
+  background: linear-gradient(90deg, rgba(22,163,74,.25), rgba(16,185,129,.25));
+  border: 1px solid rgba(16,185,129,.55);
+  color: #dcfce7;
+  border-radius: 8px;
+}
+.stError{
+  background: linear-gradient(90deg, rgba(239,68,68,.25), rgba(220,38,38,.25));
+  border: 1px solid rgba(239,68,68,.55);
+  color: #fee2e2;
+  border-radius: 8px;
+}
+.stWarning{
+  background: linear-gradient(90deg, rgba(245,158,11,.22), rgba(217,119,6,.22));
+  border: 1px solid rgba(245,158,11,.5);
+  color: #fff7ed;
+  border-radius: 8px;
+}
+.stInfo{
+  background: linear-gradient(90deg, rgba(59,130,246,.22), rgba(37,99,235,.22));
+  border: 1px solid rgba(59,130,246,.5);
+  color: #dbeafe;
+  border-radius: 8px;
+}
+
+/* Team + Insight boxes */
+.team-card,
+.insight-box{
+  background: linear-gradient(135deg, #0f172a 0%, #141a2a 100%);
+  color: var(--text);
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  box-shadow: 0 10px 32px rgba(0,0,0,.5);
+  border: 1px solid var(--border);
+}
+.insight-box{ border-left: 4px solid var(--accent); }
+
+/* Status boxes */
+.status-high{
+  background: linear-gradient(135deg, #3b0b0b, #551a1a);
+  color: #fecaca;
+  padding: 2rem; border-radius: 12px; text-align: center;
+  box-shadow: 0 8px 28px rgba(239,68,68,.25);
+  border: 1px solid rgba(239,68,68,.5);
+}
+.status-low{
+  background: linear-gradient(135deg, #0d2b1a, #14422a);
+  color: #bbf7d0;
+  padding: 2rem; border-radius: 12px; text-align: center;
+  box-shadow: 0 8px 28px rgba(34,197,94,.25);
+  border: 1px solid rgba(34,197,94,.5);
+}
+
+/* Tables */
+.dataframe{
+  background-color: var(--panel) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 6px 22px rgba(0,0,0,.45);
+  border-radius: 10px !important;
+}
+
+/* Expanders */
+.streamlit-expanderHeader{
+  background: linear-gradient(90deg, #0f172a, #141a2a) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  padding: 1rem !important;
+  transition: all .2s ease !important;
+}
+.streamlit-expanderHeader:hover{
+  background: linear-gradient(90deg, #1a2040, #232a4e) !important;
+  box-shadow: 0 8px 22px rgba(99,102,241,.25);
+}
+.streamlit-expanderContent{
+  background: #0c1324 !important;
+  border: 1px solid var(--border) !important;
+  border-top: none !important;
+  border-radius: 0 0 10px 10px !important;
+  color: var(--text) !important;
+}
+
+/* Global text */
+.stMarkdown, .stText, p, div, span{ color: var(--text) !important; }
+h1, h2, h3, h4, h5, h6{ color: #ffffff !important; }
+
+/* Hide Streamlit chrome */
+#MainMenu{visibility:hidden;}
+footer{visibility:hidden;}
+header{visibility:hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-# Professional Header
+# Header (unchanged content, now sits on darker background)
 st.markdown("""
 <div class="main-header">
-    <h1>Customer Churn Prediction Dashboard</h1>
-    <h3>Advanced Analytics for Customer Retention</h3>
+  <h1>Customer Churn Prediction Dashboard</h1>
+  <h3>Advanced Analytics for Customer Retention</h3>
 </div>
 """, unsafe_allow_html=True)
+
 
 # Initialize session state
 if 'df1' not in st.session_state:
