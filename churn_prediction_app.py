@@ -83,11 +83,6 @@ if upload_file is not None:
         st.sidebar.error(f"Error reading the file: {e}")
 
 
-# Sidebar navigation
-st.sidebar.title("Navigation")
-st.sidebar.markdown("---")
-
-
 def preprocess_data(df1):
     processed_data = df1.copy()
     
@@ -114,7 +109,6 @@ def preprocess_data(df1):
 
 
 def page1():
-    st.info('👥 Team info has moved to the **About** page at the top.')
     st.write("###  Preview of Uploaded Data")
     if 'df1' not in st.session_state or st.session_state.df1 is None:
         st.warning("Please upload a CSV file first.")
@@ -1115,8 +1109,7 @@ def page_about():
         <h2 style="color: #030a0a; text-align: center;">📌 About This App</h2>
         <p style="text-align:center;max-width:900px;margin:0 auto;">
             This dashboard predicts customer churn and provides EDA, preprocessing,
-            model training, evaluation, and batch scoring. The machine learning code
-            is unchanged; this update only reorganizes navigation and moves the team details here.
+            model training, evaluation, and batch prediction.
         </p>
     </div>
     """, unsafe_allow_html=True)
