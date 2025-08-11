@@ -128,6 +128,7 @@ div[data-testid="stTabs"] > div[role="tablist"] {
 ''' , unsafe_allow_html=True)
 
 st.markdown("""
+<style>
 /* Sidebar File Uploader styling */
 section[data-testid="stSidebar"] div[data-testid="stFileUploader"]{
   background: rgba(255,255,255,0.06);
@@ -147,7 +148,7 @@ section[data-testid="stSidebar"] div[data-testid="stFileUploader"] label {
 section[data-testid="stSidebar"] div[data-testid="stFileUploader"] label:hover {
   filter: brightness(0.92);
 }
-
+</style>
 """, unsafe_allow_html=True)
 #st.sidebar.markdown("""
 #**Group 7 Team Members**
@@ -187,11 +188,6 @@ if upload_file is not None:
         st.sidebar.error(f"Error reading the file: {e}")
 
 
-# Sidebar navigation
-st.sidebar.title("Navigation")
-st.sidebar.markdown("---")
-
-
 def preprocess_data(df1):
     processed_data = df1.copy()
     
@@ -218,7 +214,6 @@ def preprocess_data(df1):
 
 
 def page1():
-    st.info('👥 Team info has moved to the **About** page at the top.')
     st.write("###  Preview of Uploaded Data")
     if 'df1' not in st.session_state or st.session_state.df1 is None:
         st.warning("Please upload a CSV file first.")
@@ -1222,8 +1217,7 @@ def page_about():
         <h2 style="color: #030a0a; text-align: center;">📌 About This App</h2>
         <p style="text-align:center;max-width:900px;margin:0 auto;">
             This dashboard predicts customer churn and provides EDA, preprocessing,
-            model training, evaluation, and batch scoring. The machine learning code
-            is unchanged; this update only reorganizes navigation and moves the team details here.
+            model training and evaluation.
         </p>
     </div>
     """, unsafe_allow_html=True)
