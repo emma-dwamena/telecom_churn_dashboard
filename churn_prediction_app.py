@@ -39,229 +39,296 @@ st.set_page_config(
 # Professional CSS styling with dark theme
 st.markdown("""
 <style>
-/* =========================================================
-   Professional Dark Theme for Streamlit
-   - Consistent tokens
-   - Subtle depth, high contrast
-   - Accessible focus states
-   ======================================================= */
-
-/* -------- Design tokens -------- */
-:root{
-  --bg: #0b0f19;          /* app background */
-  --surface-1: #0f172a;   /* panels/cards */
-  --surface-2: #111827;   /* hover state */
-  --text: #e5e7eb;        /* primary text */
-  --muted: #9ca3af;       /* secondary text */
-  --border: #1f2937;      /* borders */
-  --brand: #6366f1;       /* primary */
-  --brand-strong: #4f46e5;
-  --shadow: 0 8px 24px rgba(0,0,0,.45);
-  --radius: 12px;
-}
-
-/* Font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-/* -------- Base app -------- */
-html, body, .stApp{
-  background: var(--bg) !important;
-  color: var(--text) !important;
-  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-}
-.block-container{ padding: 0 1rem !important; }
-
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: no-preference){
-  *{ transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
-}
-
-/* -------- Header -------- */
-.main-header{
-  background: var(--surface-1);
-  padding: 2rem;
-  border-radius: var(--radius);
-  margin-bottom: 2rem;
-  color: var(--text);
-  text-align: center;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-}
-.main-header h1{ margin: 0 0 .25rem 0; font-weight: 700; }
-.main-header h3{ margin: 0; font-weight: 500; color: var(--muted); }
-
-/* -------- Navigation container (optional wrapper) -------- */
-.nav-container{
-  background: var(--surface-1);
-  padding: 1rem;
-  border-radius: var(--radius);
-  margin-bottom: 2rem;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-}
-
-/* -------- Buttons -------- */
-.stButton > button{
-  color: var(--text);
-  background: linear-gradient(180deg, var(--surface-1), var(--surface-2));
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: .7rem 1.1rem;
-  font-weight: 600;
-  box-shadow: 0 4px 14px rgba(0,0,0,.35);
-}
-.stButton > button:hover{
-  background: var(--surface-2);
-  border-color: #2b3447;
-}
-.stButton > button:focus-visible{
-  outline: 3px solid rgba(99,102,241,.45);
-  outline-offset: 1px;
-}
-
-/* -------- Tabs -------- */
-.stTabs [data-baseweb="tab-list"]{
-  gap: 6px;
-  background: var(--surface-1);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: .4rem;
-}
-.stTabs [data-baseweb="tab"]{
-  background: transparent;
-  color: var(--text);
-  border-radius: 8px;
-  padding: .75rem 1.25rem;
-  font-weight: 600;
-  border: 1px solid transparent;
-}
-.stTabs [data-baseweb="tab"]:hover{
-  background: var(--surface-2);
-}
-.stTabs [aria-selected="true"]{
-  background: var(--surface-2) !important;
-  border-color: #2b3447 !important;
-  box-shadow: inset 0 -2px 0 var(--brand);
-}
-
-/* -------- Cards (metrics, team, insights) -------- */
-.metric-card, .team-card, .insight-box{
-  background: var(--surface-1);
-  color: var(--text);
-  padding: 1.6rem;
-  border-radius: var(--radius);
-  margin: 1rem 0;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-}
-.insight-box{ border-left: 4px solid var(--brand); }
-
-/* -------- Inputs -------- */
-.stSelectbox > div > div,
-.stNumberInput > div > div > input{
-  background: var(--surface-1) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 10px !important;
-  color: var(--text) !important;
-}
-
-/* -------- File uploader (Streamlit built-in) -------- */
-[data-testid="stFileUploader"] > section{
-  padding: 0 !important; /* tighter */
-}
-[data-testid="stFileUploaderDropzone"]{
-  background: var(--surface-1) !important;
-  border: 2px dashed var(--brand) !important;
-  border-radius: var(--radius) !important;
-  color: var(--text) !important;
-  box-shadow: var(--shadow);
-}
-[data-testid="stFileUploaderDropzone"]:hover{
-  background: var(--surface-2) !important;
-  border-color: var(--brand-strong) !important;
-}
-[data-testid="stFileUploader"] label,
-[data-testid="stFileUploader"] small{
-  color: var(--muted) !important;
-}
-
-/* -------- Alerts (custom classes you use) -------- */
-.stSuccess{
-  background: rgba(16,185,129,.15);
-  border: 1px solid rgba(16,185,129,.5);
-  color: #d1fae5;
-  border-radius: 10px;
-  padding: .9rem 1rem;
-}
-.stError{
-  background: rgba(239,68,68,.15);
-  border: 1px solid rgba(239,68,68,.5);
-  color: #fee2e2;
-  border-radius: 10px;
-  padding: .9rem 1rem;
-}
-.stWarning{
-  background: rgba(245,158,11,.15);
-  border: 1px solid rgba(245,158,11,.5);
-  color: #ffedd5;
-  border-radius: 10px;
-  padding: .9rem 1rem;
-}
-.stInfo{
-  background: rgba(59,130,246,.15);
-  border: 1px solid rgba(59,130,246,.5);
-  color: #dbeafe;
-  border-radius: 10px;
-  padding: .9rem 1rem;
-}
-
-/* -------- Tables -------- */
-.dataframe{
-  background: var(--surface-1) !important;
-  color: var(--text) !important;
-  border: 1px solid var(--border) !important;
-  box-shadow: var(--shadow);
-  border-radius: 10px !important;
-}
-
-/* -------- Expanders -------- */
-.streamlit-expanderHeader{
-  background: var(--surface-1) !important;
-  color: var(--text) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 10px !important;
-  font-weight: 600 !important;
-  padding: 1rem !important;
-}
-.streamlit-expanderHeader:hover{ background: var(--surface-2) !important; }
-.streamlit-expanderContent{
-  background: #0c1324 !important;
-  border: 1px solid var(--border) !important;
-  border-top: none !important;
-  border-radius: 0 0 10px 10px !important;
-  color: var(--text) !important;
-}
-
-/* -------- Typography -------- */
-.stMarkdown, .stText, p, div, span{ color: var(--text) !important; }
-h1, h2, h3, h4, h5, h6{ color: #fff !important; }
-
-/* -------- Hide Streamlit chrome (optional) -------- */
-#MainMenu{visibility:hidden;}
-footer{visibility:hidden;}
-header{visibility:hidden;}
+    /* Import professional font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    /* Dark theme base */
+    .main {
+        padding: 0rem 1rem;
+        font-family: 'Inter', sans-serif;
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+    
+    /* Dark theme for streamlit elements */
+    .stApp {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+    
+    /* Header styling - dark theme */
+    .main-header {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        padding: 2.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        color: white;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border: 1px solid #4a5568;
+    }
+    
+    /* Navigation styling - dark theme */
+    .nav-container {
+        background: linear-gradient(90deg, #2d3748 0%, #4a5568 100%);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        border: 1px solid #4a5568;
+    }
+    
+    /* Enhanced navigation buttons with different colors */
+    .stButton > button {
+        font-weight: 500;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 8px;
+        padding: 0.7rem 1.5rem;
+        margin: 0.2rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Different colors for navigation buttons */
+    .stButton > button:nth-child(1) {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+    
+    .stButton > button:nth-child(2) {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+    }
+    
+    .stButton > button:nth-child(3) {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+    }
+    
+    .stButton > button:nth-child(4) {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+        color: white;
+    }
+    
+    .stButton > button:nth-child(5) {
+        background: linear-gradient(135deg, #fa709a, #fee140);
+        color: white;
+    }
+    
+    .stButton > button:nth-child(6) {
+        background: linear-gradient(135deg, #a8edea, #fed6e3);
+        color: #2d3748;
+    }
+    
+    .stButton > button:nth-child(7) {
+        background: linear-gradient(135deg, #ffecd2, #fcb69f);
+        color: #2d3748;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Enhanced tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 2px;
+        background: #2d3748;
+        border-radius: 8px;
+        padding: 0.5rem;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: linear-gradient(135deg, #4a5568, #2d3748);
+        color: white;
+        border-radius: 6px;
+        padding: 0.8rem 1.5rem;
+        font-weight: 500;
+        border: 1px solid #4a5568;
+        transition: all 0.3s ease;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #667eea, #764ba2) !important;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Dark theme metric cards */
+    .metric-card {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        padding: 1.8rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        border: 1px solid #4a5568;
+        margin: 1rem 0;
+        transition: transform 0.2s ease;
+        color: white;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        border: 1px solid #667eea;
+    }
+    
+    /* Form styling - dark theme */
+    .stSelectbox > div > div, .stNumberInput > div > div > input {
+        background-color: #2d3748 !important;
+        border: 1px solid #4a5568 !important;
+        border-radius: 6px;
+        font-family: 'Inter', sans-serif;
+        color: white !important;
+    }
+    
+    /* File uploader styling - dark theme */
+    .uploadedFile {
+        border: 2px dashed #667eea;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        background: #2d3748;
+        color: white;
+    }
+    
+    /* Alert styling - dark theme */
+    .stSuccess {
+        background: linear-gradient(90deg, #48bb78, #38a169);
+        border-radius: 6px;
+        color: white;
+        border: 1px solid #48bb78;
+    }
+    
+    .stError {
+        background: linear-gradient(90deg, #f56565, #e53e3e);
+        border-radius: 6px;
+        color: white;
+        border: 1px solid #f56565;
+    }
+    
+    .stWarning {
+        background: linear-gradient(90deg, #ed8936, #dd6b20);
+        border-radius: 6px;
+        color: white;
+        border: 1px solid #ed8936;
+    }
+    
+    .stInfo {
+        background: linear-gradient(90deg, #4299e1, #3182ce);
+        border-radius: 6px;
+        color: white;
+        border: 1px solid #4299e1;
+    }
+    
+    /* Team member card - dark theme */
+    .team-card {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border: 1px solid #4a5568;
+    }
+    
+    /* Dark theme insight boxes */
+    .insight-box {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        padding: 1.8rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        color: white;
+        border: 1px solid #4a5568;
+    }
+    
+    /* Status boxes - dark theme */
+    .status-high {
+        background: linear-gradient(135deg, #f56565, #e53e3e);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 6px 25px rgba(245, 101, 101, 0.4);
+        border: 1px solid #f56565;
+    }
+    
+    .status-low {
+        background: linear-gradient(135deg, #48bb78, #38a169);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 6px 25px rgba(72, 187, 120, 0.4);
+        border: 1px solid #48bb78;
+    }
+    
+    /* Dark theme table styling */
+    .dataframe {
+        background-color: #2d3748 !important;
+        color: white !important;
+        border: 1px solid #4a5568 !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+    }
+    
+    /* Expander styling - dark theme */
+    .streamlit-expanderHeader {
+        background: linear-gradient(90deg, #2d3748, #4a5568) !important;
+        color: white !important;
+        border: 1px solid #4a5568 !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 1rem !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .streamlit-expanderHeader:hover {
+        background: linear-gradient(90deg, #667eea, #764ba2) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .streamlit-expanderContent {
+        background: #1a202c !important;
+        border: 1px solid #4a5568 !important;
+        border-top: none !important;
+        border-radius: 0 0 8px 8px !important;
+        color: white !important;
+    }
+    
+    /* Text styling for dark theme */
+    .stMarkdown, .stText, p, div, span {
+        color: #ffffff !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff !important;
+    }
+    
+    /* Hide streamlit elements */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-# Header
+# Professional Header
 st.markdown("""
 <div class="main-header">
-  <h1>Customer Churn Prediction Dashboard</h1>
-  <h3>Advanced Analytics for Customer Retention</h3>
+    <h1>Customer Churn Prediction Dashboard</h1>
+    <h3>Advanced Analytics for Customer Retention</h3>
 </div>
 """, unsafe_allow_html=True)
-
-
 
 # Initialize session state
 if 'df1' not in st.session_state:
@@ -1343,48 +1410,97 @@ def page7():
         
         if st.button("Generate Batch Predictions", type="primary"):
             with st.spinner("Processing predictions..."):
-                
-                # Prepare data
+
+                # --- 1) IDs & clean copy ---
                 if "customerID" in user_df.columns:
-                    ids = user_df["customerID"]
-                    prediction_df = user_df.drop(columns=["customerID"])
+                    ids = user_df["customerID"].astype(str).reset_index(drop=True)
+                    prediction_df = user_df.drop(columns=["customerID"]).copy()
                 else:
-                    ids = pd.Series([f"Customer-{i+1}" for i in range(len(user_df))])
+                    ids = pd.Series([f"Customer-{i+1}" for i in range(len(user_df))], dtype=str)
                     prediction_df = user_df.copy()
-                
+            
+                # --- 2) Enforce training schema if available ---
+                # Save these when you train: st.session_state.feature_names = list(X_train.columns)
+                expected_cols = st.session_state.get("feature_names", list(prediction_df.columns))
+                missing = [c for c in expected_cols if c not in prediction_df.columns]
+                extra = [c for c in prediction_df.columns if c not in expected_cols]
+            
+                if missing:
+                    st.error(
+                        "Your CSV is missing required columns:\n\n- " + "\n- ".join(missing) +
+                        "\n\nPlease upload a file with the same structure as the training data."
+                    )
+                    st.stop()
+            
+                if extra:
+                    st.warning(
+                        "Extra columns in the CSV (ignored for prediction):\n\n- " + "\n- ".join(extra)
+                    )
+            
+                # Reorder/select to match training exactly
+                prediction_df = prediction_df[[c for c in expected_cols if c in prediction_df.columns]]
+            
+                # --- 3) Get model & safe probability helper ---
+                model = st.session_state.models[selected_model]
+            
+                def get_probabilities_safe(clf, X):
+                    """Return probabilities in [0,1] robustly."""
+                    import numpy as np
+                    # If your model is a Pipeline, this works end-to-end on raw X
+                    if hasattr(clf, "predict_proba"):
+                        proba = clf.predict_proba(X)
+                        if proba.ndim == 2 and proba.shape[1] >= 2:
+                            return proba[:, 1]
+                        # Binary but returned shape (n,) or odd estimators
+                        return np.ravel(proba)
+                    if hasattr(clf, "decision_function"):
+                        scores = clf.decision_function(X)
+                        scores = np.array(scores).reshape(-1)
+                        # Fallback scaling to [0,1] (not calibrated; consider CalibratedClassifierCV at training time)
+                        s_min, s_max = scores.min(), scores.max()
+                        if s_max > s_min:
+                            return (scores - s_min) / (s_max - s_min + 1e-12)
+                        return np.full_like(scores, 0.5, dtype=float)
+                    # Last resort: use hard predictions as 0/1
+                    preds = clf.predict(X)
+                    return np.array(preds, dtype=float)
+            
                 try:
-                    # Get model and make predictions
-                    model = st.session_state.models[selected_model]
-                    
-                    if selected_model == "SVM":
-                        predictions = model.predict(prediction_df)
-                        probabilities = model.predict_proba(prediction_df)[:, 1]
-                    else:
-                        predictions = model.predict(prediction_df)
-                        probabilities = model.predict_proba(prediction_df)[:, 1]
-                    
-                    # Create results
+                    # --- 4) Predict labels & probabilities ---
+                    predictions = model.predict(prediction_df)
+            
+                    # If model lacks predict_proba (e.g., LinearSVC or SVC(probability=False)), this won’t crash:
+                    probabilities = get_probabilities_safe(model, prediction_df)
+            
+                    # --- 5) Build results (ensure equal length & simple index) ---
+                    import numpy as np
+                    churn_labels = np.where(np.array(predictions) == 1, "High Risk", "Low Risk")
+                    probs_pct = (np.array(probabilities) * 100).round(1)
+            
+                    # Risk buckets on raw [0,1] probs (if we fell back to scaled scores, treat as relative risk)
+                    risk_cat = np.where(probabilities > 0.7, "High",
+                                np.where(probabilities > 0.4, "Medium", "Low"))
+            
                     results_df = pd.DataFrame({
-                        "CustomerID": ids,
-                        "Churn_Prediction": ["High Risk" if p == 1 else "Low Risk" for p in predictions],
-                        "Churn_Probability": (probabilities * 100).round(1),
-                        "Risk_Category": ["High" if p > 0.7 else "Medium" if p > 0.4 else "Low" for p in probabilities]
+                        "CustomerID": ids.tolist(),
+                        "Churn_Prediction": churn_labels.tolist(),
+                        "Churn_Probability": probs_pct.tolist(),
+                        "Risk_Category": risk_cat.tolist()
                     })
-                    
+            
                     st.success("Predictions completed successfully!")
-                    
+            
                     # Display results
                     st.markdown("### Prediction Results")
                     st.dataframe(results_df, use_container_width=True)
-                    
-                    # Summary statistics
+            
+                    # --- 6) Summary metrics ---
+                    high_risk = int((probabilities > 0.7).sum())
+                    medium_risk = int(((probabilities > 0.4) & (probabilities <= 0.7)).sum())
+                    low_risk = int((probabilities <= 0.4).sum())
+                    avg_prob = float(np.mean(probabilities) * 100)
+            
                     col1, col2, col3, col4 = st.columns(4)
-                    
-                    high_risk = sum(probabilities > 0.7)
-                    medium_risk = sum((probabilities > 0.4) & (probabilities <= 0.7))
-                    low_risk = sum(probabilities <= 0.4)
-                    avg_prob = probabilities.mean() * 100
-                    
                     with col1:
                         st.markdown(f"""
                         <div class="metric-card">
@@ -1392,7 +1508,6 @@ def page7():
                             <h2>{high_risk}</h2>
                         </div>
                         """, unsafe_allow_html=True)
-                    
                     with col2:
                         st.markdown(f"""
                         <div class="metric-card">
@@ -1400,7 +1515,6 @@ def page7():
                             <h2>{medium_risk}</h2>
                         </div>
                         """, unsafe_allow_html=True)
-                    
                     with col3:
                         st.markdown(f"""
                         <div class="metric-card">
@@ -1408,7 +1522,6 @@ def page7():
                             <h2>{low_risk}</h2>
                         </div>
                         """, unsafe_allow_html=True)
-                    
                     with col4:
                         st.markdown(f"""
                         <div class="metric-card">
@@ -1416,20 +1529,21 @@ def page7():
                             <h2>{avg_prob:.1f}%</h2>
                         </div>
                         """, unsafe_allow_html=True)
-                    
-                    # Risk distribution visualization
+            
+                    # Risk chart
                     risk_dist = pd.DataFrame({
                         'Risk Level': ['Low Risk', 'Medium Risk', 'High Risk'],
                         'Count': [low_risk, medium_risk, high_risk]
                     })
-                    
-                    fig_risk = px.pie(risk_dist, values='Count', names='Risk Level',
-                                    title="Risk Distribution Analysis",
-                                    color_discrete_sequence=['#27ae60', '#f39c12', '#e74c3c'])
+                    fig_risk = px.pie(
+                        risk_dist, values='Count', names='Risk Level',
+                        title="Risk Distribution Analysis",
+                        color_discrete_sequence=['#27ae60', '#f39c12', '#e74c3c']
+                    )
                     fig_risk.update_layout(title_font_size=18)
                     st.plotly_chart(fig_risk, use_container_width=True)
-                    
-                    # Download functionality
+            
+                    # Download
                     csv = results_df.to_csv(index=False)
                     st.download_button(
                         label="Download Results as CSV",
@@ -1438,10 +1552,14 @@ def page7():
                         mime="text/csv",
                         type="primary"
                     )
-                    
+            
                 except Exception as e:
-                    st.error(f"Error during prediction: {str(e)}")
-                    st.info("Please ensure your CSV file has the same structure as the training data.")
+                    import traceback
+                    st.error(f"Error during prediction: {e}")
+                    st.caption("Full traceback:")
+                    st.code(traceback.format_exc())
+                    st.info("Please ensure your CSV uses the same schema and preprocessing as the training data.")
+
 
 # Page mapping
 pages = [page1, page2, page3, page4, page5, page6, page7]
