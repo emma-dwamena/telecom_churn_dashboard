@@ -83,6 +83,11 @@ if upload_file is not None:
         st.sidebar.error(f"Error reading the file: {e}")
 
 
+# Sidebar navigation
+st.sidebar.title("Navigation")
+st.sidebar.markdown("---")
+
+
 def preprocess_data(df1):
     processed_data = df1.copy()
     
@@ -109,6 +114,7 @@ def preprocess_data(df1):
 
 
 def page1():
+    st.info('👥 Team info has moved to the **About** page at the top.')
     st.write("###  Preview of Uploaded Data")
     if 'df1' not in st.session_state or st.session_state.df1 is None:
         st.warning("Please upload a CSV file first.")
@@ -1082,7 +1088,61 @@ def page7():
             "CustomerID": ids,
             "Churn_Prediction": ["Yes" if p == 1 else "No" for p in predictions],
             "Churn_Probability": proba.round(3)
-        })
+        
+
+# ---- Risk Tiering & Distribution (Low/Medium/High) ----
+st.markdown("### Risk Tiering")
+low_high = st.slider(
+    "Set risk thresholds (Low ≤ p < Mid, Mid ≤ p < High)",
+    0.0, 1.0, (0.33, 0.66), 0.01, key="risk_thresholds_batch"
+)
+low_thr, high_thr = low_high
+
+def _risk_bucket(p: float) -> str:
+    if p < low_thr:
+        return "Low"
+    elif p < high_thr:
+        return "Medium"
+    else:
+        return "High"
+
+result_df["Risk_Tier"] = result_df["Churn_Probability"].apply(_risk_bucket)
+
+# Overall risk distribution (all customers)
+order = ["Low", "Medium", "High"]
+overall_counts = result_df["Risk_Tier"].value_counts().reindex(order, fill_value=0)
+
+# Distribution among customers predicted to churn
+churn_yes_df = result_df[result_df["Churn_Prediction"] == "Yes"]
+churn_counts = churn_yes_df["Risk_Tier"].value_counts().reindex(order, fill_value=0)
+
+c1, c2, c3 = st.columns(3)
+with c1:
+    st.metric("Predicted Churn — High Risk", int(churn_counts.get("High", 0)))
+with c2:
+    st.metric("Predicted Churn — Medium Risk", int(churn_counts.get("Medium", 0)))
+with c3:
+    st.metric("Predicted Churn — Low Risk", int(churn_counts.get("Low", 0)))
+
+st.markdown("#### Distribution (All Customers)")
+fig_overall = px.bar(x=overall_counts.index, y=overall_counts.values,
+                     labels={"x": "Risk Tier", "y": "Count"},
+                     title="Risk Distribution — All Customers")
+st.plotly_chart(fig_overall, use_container_width=True)
+
+st.markdown("#### Distribution (Customers Predicted to Churn)")
+if len(churn_yes_df) > 0:
+    fig_churn = px.bar(x=churn_counts.index, y=churn_counts.values,
+                       labels={"x": "Risk Tier", "y": "Count"},
+                       title="Risk Distribution — Predicted Churn Only")
+    st.plotly_chart(fig_churn, use_container_width=True)
+else:
+    st.info("No customers predicted to churn with the current model/thresholds.")
+
+# Show enhanced results preview (sorted by probability desc)
+st.markdown("### Predictions with Risk Tiers (Top 20 by probability)")
+st.dataframe(result_df.sort_values("Churn_Probability", ascending=False).head(20))
+})
     
         st.success("✅ Predictions Completed")
         st.dataframe(result_df)
@@ -1100,7 +1160,8 @@ def page_about():
         <h2 style="color: #030a0a; text-align: center;">📌 About This App</h2>
         <p style="text-align:center;max-width:900px;margin:0 auto;">
             This dashboard predicts customer churn and provides EDA, preprocessing,
-            model training, evaluation, and batch scoring.
+            model training, evaluation, and batch scoring. The machine learning code
+            is unchanged; this update only reorganizes navigation and moves the team details here.
         </p>
     </div>
     """, unsafe_allow_html=True)
