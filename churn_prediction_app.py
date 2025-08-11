@@ -28,10 +28,94 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 warnings.filterwarnings('ignore')
 
-\1
+st.set_page_config(
+     page_title='Customer Churn Prediction',
+     page_icon='📡',
+     )
 
-    st.info('👥 Team info has moved to the **About** tab at the top.')
-st.write("###  Preview of Uploaded Data")
+st.markdown("""
+<style>
+div[data-testid="stTabs"] > div[role="tablist"] {
+  position: sticky; top: 0; z-index: 1000;
+  background: white; padding-top: 0.5rem; margin-top: -0.5rem;
+  border-bottom: 1px solid #eee;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+#st.sidebar.markdown("""
+#**Group 7 Team Members**
+#
+#Ruth Mensah - 22253087      
+#Emmanuel Oduro Dwamena - 11410636
+#Zoe Akua Ohene-Ampofo - 22252412
+#Sandra Animwaa Bamfo - 22256394
+#Joshua Kwaku Mensah - 22257672
+#""")
+
+Logo = Image.open("telco_logo.jpg")
+st.image(Logo, caption="", width=150)
+
+# Initialize session state for data persistence across pages
+if 'df1' not in st.session_state:
+    st.session_state.df1 = None
+if 'processed_data' not in st.session_state:
+    st.session_state.processed_data = None
+if 'models' not in st.session_state:
+    st.session_state.models = {}
+if 'model_metrics' not in st.session_state:
+    st.session_state.model_metrics = {}
+
+upload_file = st.sidebar.file_uploader("Click here to upload your CSV file", type=["csv"])
+
+# Check if a file is uploaded
+if upload_file is not None:
+    try:
+        # Read and store in session state
+        st.session_state.df1 = pd.read_csv(upload_file)
+        df1 = st.session_state.df1
+
+        st.sidebar.success("File uploaded successfully.")
+
+    except Exception as e:
+        st.sidebar.error(f"Error reading the file: {e}")
+
+
+# Sidebar navigation
+st.sidebar.title("Navigation")
+st.sidebar.markdown("---")
+
+
+def preprocess_data(df1):
+    processed_data = df1.copy()
+    
+    # Handle TotalCharges column (convert to numeric and handle missing values)
+    processed_data['TotalCharges'] = pd.to_numeric(processed_data['TotalCharges'], errors='coerce')
+    processed_data['TotalCharges'].fillna(processed_data['TotalCharges'].median(), inplace=True)
+    categorical_cols = df1.select_dtypes(include=['object']).columns
+    mode_imputer = SimpleImputer(strategy='most_frequent')
+    df1[categorical_cols] = mode_imputer.fit_transform(df1[categorical_cols])
+    
+    # Create label encoders for categorical variables
+    label_encoders = {}
+    categorical_columns = ['gender', 'Partner', 'Dependents', 'PhoneService', 'MultipleLines',
+                          'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection',
+                          'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract',
+                          'PaperlessBilling', 'PaymentMethod', 'Churn']
+    
+    for col in categorical_columns:
+        le = LabelEncoder()
+        processed_data[col] = le.fit_transform(processed_data[col])
+        label_encoders[col] = le
+    
+    return processed_data, label_encoders
+
+
+def page1():
+    st.info('👥 Team info has moved to the **About** page at the top.')
+    st.write("###  Preview of Uploaded Data")
     if 'df1' not in st.session_state or st.session_state.df1 is None:
         st.warning("Please upload a CSV file first.")
         return
@@ -1016,113 +1100,31 @@ def page7():
 
 
 def page_about():
-    """About page: shows development team and project context."""
+    """About page: development team and project context."""
     st.markdown("""
     <div style="background-color: #f2f7f7; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
         <h2 style="color: #030a0a; text-align: center;">📌 About This App</h2>
         <p style="text-align:center;max-width:900px;margin:0 auto;">
-            This dashboard predicts customer churn and provides rich EDA, preprocessing,
-            model training, evaluation, and batch scoring. The machine learning logic
-            remains unchanged; this update only reorganizes navigation and moves the
-            development team details here.
+            This dashboard predicts customer churn and provides EDA, preprocessing,
+            model training, evaluation, and batch scoring. The machine learning code
+            is unchanged; this update only reorganizes navigation and moves the team details here.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Development team
     st.markdown("""
-    <style>
-    /* Make the tab list stick to the top */
-    div[data-testid="stTabs"] > div[role="tablist"] {
-      position: sticky; top: 0; z-index: 1000;
-      background: white; padding-top: 0.5rem; margin-top: -0.5rem;
-      border-bottom: 1px solid #eee;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    #st.sidebar.markdown("""
-    #**Group 7 Team Members**
-    #
-    #Ruth Mensah - 22253087      
-    #Emmanuel Oduro Dwamena - 11410636
-    #Zoe Akua Ohene-Ampofo - 22252412
-    #Sandra Animwaa Bamfo - 22256394
-    #Joshua Kwaku Mensah - 22257672
-    #""")
-    
-    Logo = Image.open("telco_logo.jpg")
-    st.image(Logo, caption="", width=150)
-    
-    # Initialize session state for data persistence across pages
-    if 'df1' not in st.session_state:
-        st.session_state.df1 = None
-    if 'processed_data' not in st.session_state:
-        st.session_state.processed_data = None
-    if 'models' not in st.session_state:
-        st.session_state.models = {}
-    if 'model_metrics' not in st.session_state:
-        st.session_state.model_metrics = {}
-    
-    upload_file = st.sidebar.file_uploader("Click here to upload your CSV file", type=["csv"])
-    
-    # Check if a file is uploaded
-    if upload_file is not None:
-        try:
-            # Read and store in session state
-            st.session_state.df1 = pd.read_csv(upload_file)
-            df1 = st.session_state.df1
-    
-            st.sidebar.success("File uploaded successfully.")
-    
-        except Exception as e:
-            st.sidebar.error(f"Error reading the file: {e}")
-    
-    
-    # Sidebar navigation
-    st.sidebar.title("Navigation")
-    st.sidebar.markdown("---")
-    
-    
-    def preprocess_data(df1):
-        processed_data = df1.copy()
-        
-        # Handle TotalCharges column (convert to numeric and handle missing values)
-        processed_data['TotalCharges'] = pd.to_numeric(processed_data['TotalCharges'], errors='coerce')
-        processed_data['TotalCharges'].fillna(processed_data['TotalCharges'].median(), inplace=True)
-        categorical_cols = df1.select_dtypes(include=['object']).columns
-        mode_imputer = SimpleImputer(strategy='most_frequent')
-        df1[categorical_cols] = mode_imputer.fit_transform(df1[categorical_cols])
-        
-        # Create label encoders for categorical variables
-        label_encoders = {}
-        categorical_columns = ['gender', 'Partner', 'Dependents', 'PhoneService', 'MultipleLines',
-                              'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection',
-                              'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract',
-                              'PaperlessBilling', 'PaymentMethod', 'Churn']
-        
-        for col in categorical_columns:
-            le = LabelEncoder()
-            processed_data[col] = le.fit_transform(processed_data[col])
-            label_encoders[col] = le
-        
-        return processed_data, label_encoders
-    
-    
-    def page1():
-        st.markdown("""
-        <div style="background-color: #f2f7f7; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
-            <h2 style="color: #030a0a; text-align: center;">👥 Group 7 Team Members</h2>
-            <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
-                <div>• Ruth Mensah - 22253087</div>
-                <div>• Emmanuel Oduro Dwamena - 11410636</div>
-                <div>• Zoe Akua Ohene-Ampofo - 22252412</div>
-                <div>• Sandra Animwaa Bamfo - 22256394</div>
-                <div>• Joshua Kwaku Mensah - 22257672</div>
-            </div>
+    <div style="background-color: #f2f7f7; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
+        <h2 style="color: #030a0a; text-align: center;">👥 Group 7 Team Members</h2>
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+            <div>• Ruth Mensah - 22253087</div>
+            <div>• Emmanuel Oduro Dwamena - 11410636</div>
+            <div>• Zoe Akua Ohene-Ampofo - 22252412</div>
+            <div>• Sandra Animwaa Bamfo - 22256394</div>
+            <div>• Joshua Kwaku Mensah - 22257672</div>
         </div>
-        """, unsafe_allow_html=True)
-        
+    </div>
+    """, unsafe_allow_html=True)
+
 
 pages = {
     "About": page_about,
@@ -1136,7 +1138,9 @@ pages = {
 }
 
 # creating the sidebar with selection box
-select_page = st.sidebar.selectbox("Select page", list(pages.keys()))
-
-# Display page when selected
-pages[select_page]()
+# --- Top tabs, sticky via CSS ---
+_tab_names = list(pages.keys())
+_tabs = st.tabs(_tab_names)
+for _i, _name in enumerate(_tab_names):
+    with _tabs[_i]:
+        pages[_name]()
