@@ -195,7 +195,7 @@ st.markdown("""
         padding: 2rem;
         text-align: center;
         background: #6f66ea;
-        color: white;
+        color: blue;
     }
     
     /* Alert styling - dark theme */
