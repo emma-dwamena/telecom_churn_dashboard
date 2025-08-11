@@ -194,7 +194,7 @@ st.markdown("""
         border-radius: 8px;
         padding: 2rem;
         text-align: center;
-        background: #2d3748;
+        background: #6f66ea;
         color: white;
     }
     
