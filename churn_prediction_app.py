@@ -188,29 +188,35 @@ st.markdown("""
         color: white !important;
     }
     
-    /* File uploader styling - dark theme */
+/* File uploader styling - dark theme */
 .uploadedFile {
     border: 2px dashed #667eea;
     border-radius: 8px;
     padding: 2rem;
     text-align: center;
-    background: #6f66ea;
-    color: #ffffff;
+    background: #1e1e2f; /* Dark background */
+    color: #e0e0e0; /* Light text */
     font-family: Arial, sans-serif;
     font-size: 1rem;
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
+/* Placeholder text (drag and drop) */
+.uploadedFile p {
+    color: #a0a0b2; /* Softer text for placeholder */
+    margin: 0;
+}
+
 /* Hover effect */
 .uploadedFile:hover {
-    background: #5a52d6;
+    background: #2a2a40;
     border-color: #9aa0ff;
 }
 
 /* Drag-over effect */
 .uploadedFile.dragover {
-    background: #4b42c4;
+    background: #333356;
     border-color: #c3c8ff;
 }
     
