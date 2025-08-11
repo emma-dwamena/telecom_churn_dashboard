@@ -1133,21 +1133,6 @@ def page7():
                              labels={"x": "Risk Tier", "y": "Count"},
                              title="Risk Distribution — All Customers")
         st.plotly_chart(fig_overall, use_container_width=True)
-
-        st.markdown("#### Distribution (Customers Predicted to Churn)")
-        if len(churn_yes_df) > 0:
-            fig_churn = px.bar(x=churn_counts.index, y=churn_counts.values,
-                               labels={"x": "Risk Tier", "y": "Count"},
-                               title="Risk Distribution — Predicted Churn Only")
-            st.plotly_chart(fig_churn, use_container_width=True)
-        else:
-            st.info("No customers predicted to churn with the current model/thresholds.")
-
-        # Show enhanced results preview (sorted by probability desc)
-        st.markdown("### Predictions with Risk Tiers (Top 20 by probability)")
-        st.dataframe(result_df.sort_values("Churn_Probability", ascending=False).head(20))
-        st.success("✅ Predictions Completed")
-        st.dataframe(result_df)
     
         # Download button
         csv = result_df.to_csv(index=False)
