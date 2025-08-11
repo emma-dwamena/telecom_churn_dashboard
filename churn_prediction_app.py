@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
+# Plotly defaults for a cohesive professional look (UI-only)
+px.defaults.template = 'plotly_white'
+px.defaults.colorway = ['#2563eb','#10b981','#f59e0b','#ef4444','#8b5cf6','#14b8a6']
 import plotly.graph_objects as go
 import streamlit as st
 import sklearn
@@ -31,6 +34,8 @@ warnings.filterwarnings('ignore')
 st.set_page_config(
      page_title='Customer Churn Prediction',
      page_icon='📡',
+     layout='wide',
+     initial_sidebar_state='expanded',
      )
 
 st.markdown("""
@@ -45,6 +50,53 @@ div[data-testid="stTabs"] > div[role="tablist"] {
 
 
 
+
+
+st.markdown('''
+<style>
+/* ===== Professional Theme (UI-only) ===== */
+:root{
+  --bg: #f6f8fb;
+  --text: #0f172a;
+  --muted: #6b7280;
+  --panel: #ffffff;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+}
+html, body, [data-testid="stAppViewContainer"] {
+  background-color: var(--bg);
+}
+section[data-testid="stSidebar"] {
+  background: linear-gradient(180deg,#0b132b 0%,#1c2541 100%);
+  color: #e5e7eb;
+}
+section[data-testid="stSidebar"] * {
+  color: #e5e7eb !important;
+}
+h1, h2, h3, h4 { color: var(--text); letter-spacing: .2px; }
+p, label, span, div { color: var(--text); }
+div[data-testid="stMetricValue"] { color: var(--text); }
+div[data-testid="stMetricLabel"] { color: var(--muted); }
+.stButton > button {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .6rem 1rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.stButton > button:hover { border-color: #cbd5e1; }
+div[data-testid="stDataFrame"] {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+}
+/* Tabs already sticky; add subtle shadow for depth */
+div[data-testid="stTabs"] > div[role="tablist"] {
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
+}
+</style>
+''' , unsafe_allow_html=True)
 #st.sidebar.markdown("""
 #**Group 7 Team Members**
 #
@@ -83,6 +135,11 @@ if upload_file is not None:
         st.sidebar.error(f"Error reading the file: {e}")
 
 
+# Sidebar navigation
+st.sidebar.title("Navigation")
+st.sidebar.markdown("---")
+
+
 def preprocess_data(df1):
     processed_data = df1.copy()
     
@@ -109,6 +166,7 @@ def preprocess_data(df1):
 
 
 def page1():
+    st.info('👥 Team info has moved to the **About** page at the top.')
     st.write("###  Preview of Uploaded Data")
     if 'df1' not in st.session_state or st.session_state.df1 is None:
         st.warning("Please upload a CSV file first.")
@@ -1055,7 +1113,7 @@ def page7():
         return model, pipeline
     
     model, pipeline = get_model_and_pipeline()
-
+    
     # -----------------------------
     # 3. Upload and Predict
     uploaded_file = st.file_uploader("Upload a CSV file for prediction", type="csv")
@@ -1063,45 +1121,43 @@ def page7():
     if uploaded_file:
         user_df = pd.read_csv(uploaded_file)
         st.write("📄 Uploaded Data Preview:", user_df.head())
-        
-        predict_clicked = st.button("Predict Churn", type="primary")
-        if predict_clicked:
-            if "customerID" in user_df.columns:
-                ids = user_df["customerID"]
-                user_df = user_df.drop(columns=["customerID"])
-            else:
-                ids = pd.Series([f"ID-{i}" for i in range(len(user_df))])
     
-            # Preprocess
-            X_user = pipeline.transform(user_df)
-    
-            # Predict
-            predictions = model.predict(X_user)
-            proba = model.predict_proba(X_user)[:, 1]
-    
-            # Return results
-            result_df = pd.DataFrame({
-                "CustomerID": ids,
-                "Churn_Prediction": ["Yes" if p == 1 else "No" for p in predictions],
-                "Churn_Probability": proba.round(3)
-            })
-    
-            st.success("✅ Predictions Completed")
-            st.dataframe(result_df)
-    
-            # --- Pie chart: Predicted churn status (Yes/No) ---
-            st.markdown("### Predicted Churn Status — Distribution")
-            _status_counts = result_df["Churn_Prediction"].value_counts().reindex(["Yes", "No"]).fillna(0).astype(int)
-            _pie_df = _status_counts.reset_index()
-            _pie_df.columns = ["Status", "Count"]
-            fig_pred_pie = px.pie(_pie_df, values="Count", names="Status", title="Predicted Churn Status", hole=0.3)
-            st.plotly_chart(fig_pred_pie, use_container_width=True)
-    
-            # Download button
-            csv = result_df.to_csv(index=False)
-            st.download_button("⬇️ Download Results as CSV", data=csv, file_name="churn_predictions.csv", mime="text/csv")
+        if "customerID" in user_df.columns:
+            ids = user_df["customerID"]
+            user_df = user_df.drop(columns=["customerID"])
         else:
-            st.info("Click **Predict Churn** to generate predictions.")
+            ids = pd.Series([f"ID-{i}" for i in range(len(user_df))])
+    
+        # Preprocess
+        X_user = pipeline.transform(user_df)
+    
+        # Predict
+        predictions = model.predict(X_user)
+        proba = model.predict_proba(X_user)[:, 1]
+    
+        # Return results
+        result_df = pd.DataFrame({
+            "CustomerID": ids,
+            "Churn_Prediction": ["Yes" if p == 1 else "No" for p in predictions],
+            "Churn_Probability": proba.round(3)
+        })
+    
+        st.success("✅ Predictions Completed")
+        st.dataframe(result_df)
+    
+        
+
+        # --- Pie chart: Predicted churn status (Yes/No) ---
+        st.markdown("### Predicted Churn Status — Distribution")
+        _status_counts = result_df["Churn_Prediction"].value_counts().reindex(["Yes", "No"]).fillna(0).astype(int)
+        _pie_df = _status_counts.reset_index()
+        _pie_df.columns = ["Status", "Count"]
+        fig_pred_pie = px.pie(_pie_df, values="Count", names="Status", title="Predicted Churn Status", hole=0.3)
+        st.plotly_chart(fig_pred_pie, use_container_width=True)
+# Download button
+        csv = result_df.to_csv(index=False)
+        st.download_button("⬇️ Download Results as CSV", data=csv, file_name="churn_predictions.csv", mime="text/csv")
+
 
 
 def page_about():
@@ -1111,7 +1167,8 @@ def page_about():
         <h2 style="color: #030a0a; text-align: center;">📌 About This App</h2>
         <p style="text-align:center;max-width:900px;margin:0 auto;">
             This dashboard predicts customer churn and provides EDA, preprocessing,
-            model training, evaluation, and batch prediction.
+            model training, evaluation, and batch scoring. The machine learning code
+            is unchanged; this update only reorganizes navigation and moves the team details here.
         </p>
     </div>
     """, unsafe_allow_html=True)
