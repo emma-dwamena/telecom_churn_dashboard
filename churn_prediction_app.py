@@ -1093,7 +1093,16 @@ def page7():
         st.success("✅ Predictions Completed")
         st.dataframe(result_df)
     
-        # Download button
+        
+
+        # --- Pie chart: Predicted churn status (Yes/No) ---
+        st.markdown("### Predicted Churn Status — Distribution")
+        _status_counts = result_df["Churn_Prediction"].value_counts().reindex(["Yes", "No"]).fillna(0).astype(int)
+        _pie_df = _status_counts.reset_index()
+        _pie_df.columns = ["Status", "Count"]
+        fig_pred_pie = px.pie(_pie_df, values="Count", names="Status", title="Predicted Churn Status", hole=0.3)
+        st.plotly_chart(fig_pred_pie, use_container_width=True)
+# Download button
         csv = result_df.to_csv(index=False)
         st.download_button("⬇️ Download Results as CSV", data=csv, file_name="churn_predictions.csv", mime="text/csv")
 
