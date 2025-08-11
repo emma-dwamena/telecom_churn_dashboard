@@ -1201,19 +1201,43 @@ def page_about():
     """, unsafe_allow_html=True)
 
 
+# [pages dict and tabs will be injected here]
+
+_tabs = st.tabs(_tab_names)
+for _i, _name in enumerate(_tab_names):
+    with _tabs[_i]:
+        pages[_name]()
+
+# ---- Ensure required pages exist (create safe stubs if missing) ----
+def _ensure_page_stubs():
+    for i in range(1, 8):
+        name = f"page{i}"
+        if name not in globals():
+            def _stub(i=i):
+                st.warning(f"Page {i} is not available in this build.")
+            globals()[name] = _stub
+
+# Ensure About page exists too
+if "page_about" not in globals():
+    def page_about():
+        st.markdown("## About")
+        st.info("About content is not available in this build.")
+
+_ensure_page_stubs()
+
+# ---- Build pages dict (order frozen) ----
 pages = {
     "About": page_about,
-    'Home & Data Overview': page1,
-    'Data Preprocessing': page2,
-    'Model Training': page3,
-    'Model Evaluation': page4,
-    'Prediction Interface': page5,
-    'Insights & Conclusions': page6,
-    'Batch Prediction': page7
+    "Upload Data": page1,
+    "Data Understanding": page2,
+    "Exploratory Data Analysis": page3,
+    "Modeling": page4,
+    "Model Evaluation": page5,
+    "Single Prediction": page6,
+    "Batch Prediction": page7,
 }
 
-# creating the sidebar with selection box
-# --- Top tabs, sticky via CSS ---
+# ---- Top tabs (sticky if CSS present) ----
 _tab_names = list(pages.keys())
 _tabs = st.tabs(_tab_names)
 for _i, _name in enumerate(_tab_names):
