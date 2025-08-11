@@ -30,307 +30,89 @@ warnings.filterwarnings('ignore')
 
 # Page configuration
 st.set_page_config(
-    page_title='Customer Churn Prediction Dashboard',
-    page_icon='📊',
+    page_title='Customer Churn Prediction',
+    page_icon='📡',
     layout='wide',
-    initial_sidebar_state='collapsed'
+    initial_sidebar_state='expanded'
 )
 
-# Professional CSS styling with dark theme
+# Custom CSS for better aesthetics
 st.markdown("""
 <style>
-    /* Import professional font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    /* Dark theme base */
-    .main {
-        padding: 0rem 1rem;
-        font-family: 'Inter', sans-serif;
-        background-color: #1a1a1a;
-        color: #ffffff;
-    }
-    
-    /* Dark theme for streamlit elements */
-    .stApp {
-        background-color: #1a1a1a;
-        color: #ffffff;
-    }
-    
-    /* Header styling - dark theme */
     .main-header {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-        padding: 2.5rem;
-        border-radius: 12px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+        border-radius: 10px;
         margin-bottom: 2rem;
-        color: white;
         text-align: center;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        border: 1px solid #4a5568;
+        color: white;
     }
-    
-    /* Navigation styling - dark theme */
     .nav-container {
-        background: linear-gradient(90deg, #2d3748 0%, #4a5568 100%);
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #667eea;
+    }
+    .upload-container {
+        background: #e3f2fd;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        border: 2px dashed #2196f3;
+    }
+    .metric-container {
+        background: white;
         padding: 1rem;
         border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        border: 1px solid #4a5568;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin: 0.5rem 0;
     }
-    
-    /* Enhanced navigation buttons with different colors */
-    .stButton > button {
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
-        border: none;
+    .stSelectbox > div > div > select {
+        background-color: white;
+        border: 2px solid #e1e5e9;
+        border-radius: 5px;
+    }
+    .team-member {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 1rem;
         border-radius: 8px;
-        padding: 0.7rem 1.5rem;
-        margin: 0.2rem;
-        font-size: 0.9rem;
-    }
-    
-    /* Different colors for navigation buttons */
-    .stButton > button:nth-child(1) {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(2) {
-        background: linear-gradient(135deg, #f093fb, #f5576c);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(3) {
-        background: linear-gradient(135deg, #4facfe, #00f2fe);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(4) {
-        background: linear-gradient(135deg, #43e97b, #38f9d7);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(5) {
-        background: linear-gradient(135deg, #fa709a, #fee140);
-        color: white;
-    }
-    
-    .stButton > button:nth-child(6) {
-        background: linear-gradient(135deg, #a8edea, #fed6e3);
-        color: #2d3748;
-    }
-    
-    .stButton > button:nth-child(7) {
-        background: linear-gradient(135deg, #ffecd2, #fcb69f);
-        color: #2d3748;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    }
-    
-    /* Enhanced tab styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2px;
-        background: #2d3748;
-        border-radius: 8px;
-        padding: 0.5rem;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        background: linear-gradient(135deg, #4a5568, #2d3748);
-        color: white;
-        border-radius: 6px;
-        padding: 0.8rem 1.5rem;
-        font-weight: 500;
-        border: 1px solid #4a5568;
-        transition: all 0.3s ease;
-    }
-    
-    .stTabs [data-baseweb="tab"]:hover {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-    
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea, #764ba2) !important;
-        color: white !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
-    
-    /* Dark theme metric cards */
-    .metric-card {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-        padding: 1.8rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        border: 1px solid #4a5568;
-        margin: 1rem 0;
-        transition: transform 0.2s ease;
-        color: white;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-        border: 1px solid #667eea;
-    }
-    
-    /* Form styling - dark theme */
-    .stSelectbox > div > div, .stNumberInput > div > div > input {
-        background-color: #2d3748 !important;
-        border: 1px solid #4a5568 !important;
-        border-radius: 6px;
-        font-family: 'Inter', sans-serif;
-        color: white !important;
-    }
-    
-    /* File uploader styling - dark theme */
-    .uploadedFile {
-        border: 2px dashed #667eea;
-        border-radius: 8px;
-        padding: 2rem;
+        margin: 0.5rem;
         text-align: center;
-        background: #2d3748;
-        color: white;
-    }
-    
-    /* Alert styling - dark theme */
-    .stSuccess {
-        background: linear-gradient(90deg, #48bb78, #38a169);
-        border-radius: 6px;
-        color: white;
-        border: 1px solid #48bb78;
-    }
-    
-    .stError {
-        background: linear-gradient(90deg, #f56565, #e53e3e);
-        border-radius: 6px;
-        color: white;
-        border: 1px solid #f56565;
-    }
-    
-    .stWarning {
-        background: linear-gradient(90deg, #ed8936, #dd6b20);
-        border-radius: 6px;
-        color: white;
-        border: 1px solid #ed8936;
-    }
-    
-    .stInfo {
-        background: linear-gradient(90deg, #4299e1, #3182ce);
-        border-radius: 6px;
-        color: white;
-        border: 1px solid #4299e1;
-    }
-    
-    /* Team member card - dark theme */
-    .team-card {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-        color: white;
-        padding: 2.5rem;
-        border-radius: 12px;
-        margin: 1rem 0;
-        text-align: center;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        border: 1px solid #4a5568;
-    }
-    
-    /* Dark theme insight boxes */
-    .insight-box {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-        padding: 1.8rem;
-        border-radius: 8px;
-        margin: 1rem 0;
         border-left: 4px solid #667eea;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        color: white;
-        border: 1px solid #4a5568;
     }
-    
-    /* Status boxes - dark theme */
-    .status-high {
-        background: linear-gradient(135deg, #f56565, #e53e3e);
-        color: white;
-        padding: 2rem;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 6px 25px rgba(245, 101, 101, 0.4);
-        border: 1px solid #f56565;
-    }
-    
-    .status-low {
-        background: linear-gradient(135deg, #48bb78, #38a169);
-        color: white;
-        padding: 2rem;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 6px 25px rgba(72, 187, 120, 0.4);
-        border: 1px solid #48bb78;
-    }
-    
-    /* Dark theme table styling */
-    .dataframe {
-        background-color: #2d3748 !important;
-        color: white !important;
-        border: 1px solid #4a5568 !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
-    }
-    
-    /* Expander styling - dark theme */
-    .streamlit-expanderHeader {
-        background: linear-gradient(90deg, #2d3748, #4a5568) !important;
-        color: white !important;
-        border: 1px solid #4a5568 !important;
-        border-radius: 8px !important;
-        font-weight: 600 !important;
-        padding: 1rem !important;
-        transition: all 0.3s ease !important;
-    }
-    
-    .streamlit-expanderHeader:hover {
-        background: linear-gradient(90deg, #667eea, #764ba2) !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-    
-    .streamlit-expanderContent {
-        background: #1a202c !important;
-        border: 1px solid #4a5568 !important;
-        border-top: none !important;
-        border-radius: 0 0 8px 8px !important;
-        color: white !important;
-    }
-    
-    /* Text styling for dark theme */
-    .stMarkdown, .stText, p, div, span {
-        color: #ffffff !important;
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        color: #ffffff !important;
-    }
-    
-    /* Hide streamlit elements */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-# Professional Header
+# Header Section
 st.markdown("""
 <div class="main-header">
-    <h1>Customer Churn Prediction Dashboard</h1>
-    <h3>Advanced Analytics for Customer Retention</h3>
+    <h1>Customer Churn Prediction System</h1>
+    <p>Advanced Analytics for Customer Retention</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Initialize session state
+# Top Navigation and File Upload
+col1, col2 = st.columns([3, 1])
+
+with col1:
+    st.markdown("""
+    <div class="nav-container">
+        <h3>Navigation</h3>
+        <p>Select a page to explore different aspects of the churn prediction system</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="upload-container">
+        <h4>Data Upload</h4>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    upload_file = st.file_uploader("Upload your CSV file", type=["csv"], help="Upload a CSV file containing customer data")
+
+# Initialize session state for data persistence across pages
 if 'df1' not in st.session_state:
     st.session_state.df1 = None
 if 'processed_data' not in st.session_state:
@@ -340,64 +122,41 @@ if 'models' not in st.session_state:
 if 'model_metrics' not in st.session_state:
     st.session_state.model_metrics = {}
 
-# Professional navigation and file upload
-col1, col2, col3 = st.columns([2, 1, 1])
+# Check if a file is uploaded
+if upload_file is not None:
+    try:
+        st.session_state.df1 = pd.read_csv(upload_file)
+        df1 = st.session_state.df1
+        st.success("File uploaded successfully.")
+    except Exception as e:
+        st.error(f"Error reading the file: {e}")
 
-with col1:
-    st.markdown("""
-    <div class="nav-container">
-        <h4 style="color: white; margin: 0;">Data Upload Center</h4>
-    </div>
-    """, unsafe_allow_html=True)
+# Page Selection
+pages = {
+    'Home & Data Overview': 'page1',
+    'Data Preprocessing': 'page2', 
+    'Model Training': 'page3',
+    'Model Evaluation': 'page4',
+    'Prediction Interface': 'page5',
+    'Insights & Conclusions': 'page6',
+    'Batch Prediction': 'page7'
+}
 
-with col2:
-    upload_file = st.file_uploader("Upload CSV file", type=["csv"], help="Upload your customer data CSV file")
+selected_page = st.selectbox("Choose Page", list(pages.keys()), 
+                           help="Navigate through different sections of the application")
 
-with col3:
-    if upload_file is not None:
-        try:
-            st.session_state.df1 = pd.read_csv(upload_file)
-            st.success("File uploaded successfully")
-        except Exception as e:
-            st.error(f"Error: {e}")
-
-# Navigation
-st.markdown("""
-<div class="nav-container">
-    <h4 style="color: white; margin-bottom: 1rem;">Navigation Dashboard</h4>
-</div>
-""", unsafe_allow_html=True)
-
-# Professional navigation
-nav_cols = st.columns(7)
-page_names = [
-    'Home & Overview', 'Data Preprocessing', 'Model Training', 
-    'Model Evaluation', 'Prediction Interface', 'Business Insights', 'Batch Processing'
-]
-
-selected_page_index = 0
-for i, (col, page_name) in enumerate(zip(nav_cols, page_names)):
-    with col:
-        if st.button(page_name, key=f"nav_{i}"):
-            st.session_state.selected_page = i
-            selected_page_index = i
-
-if 'selected_page' not in st.session_state:
-    st.session_state.selected_page = 0
-
-selected_page_index = st.session_state.selected_page
-
+# Helper functions
 def preprocess_data(df1):
     processed_data = df1.copy()
     
-    # Handle TotalCharges column
+    # Handle TotalCharges column (convert to numeric and handle missing values)
     processed_data['TotalCharges'] = pd.to_numeric(processed_data['TotalCharges'], errors='coerce')
     processed_data['TotalCharges'].fillna(processed_data['TotalCharges'].median(), inplace=True)
     categorical_cols = df1.select_dtypes(include=['object']).columns
     mode_imputer = SimpleImputer(strategy='most_frequent')
     df1[categorical_cols] = mode_imputer.fit_transform(df1[categorical_cols])
     
-    # Create label encoders
+    # Create label encoders for categorical variables
     label_encoders = {}
     categorical_columns = ['gender', 'Partner', 'Dependents', 'PhoneService', 'MultipleLines',
                           'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection',
@@ -405,213 +164,201 @@ def preprocess_data(df1):
                           'PaperlessBilling', 'PaymentMethod', 'Churn']
     
     for col in categorical_columns:
-        le = LabelEncoder()
-        processed_data[col] = le.fit_transform(processed_data[col])
-        label_encoders[col] = le
+        if col in processed_data.columns:
+            le = LabelEncoder()
+            processed_data[col] = le.fit_transform(processed_data[col])
+            label_encoders[col] = le
     
     return processed_data, label_encoders
 
 def page1():
-    st.markdown("""
-    <div class="team-card">
-        <h2>Group 7 Team Members</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
-            <div>Ruth Mensah - 22253087</div>
-            <div>Emmanuel Oduro Dwamena - 11410636</div>
-            <div>Zoe Akua Ohene-Ampofo - 22252412</div>
-            <div>Sandra Animwaa Bamfo - 22256394</div>
-            <div>Joshua Kwaku Mensah - 22257672</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("## Team Members")
     
-    st.markdown("## Dataset Overview")
+    # Team members in a nice grid layout
+    team_cols = st.columns(3)
+    team_members = [
+        "Ruth Mensah - 22253087",
+        "Emmanuel Oduro Dwamena - 11410636", 
+        "Zoe Akua Ohene-Ampofo - 22252412",
+        "Sandra Animwaa Bamfo - 22256394",
+        "Joshua Kwaku Mensah - 22257672"
+    ]
+    
+    for i, member in enumerate(team_members):
+        with team_cols[i % 3]:
+            st.markdown(f"""
+            <div class="team-member">
+                <strong>{member.split(' - ')[0]}</strong><br>
+                <small>{member.split(' - ')[1]}</small>
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.markdown("## Preview of Uploaded Data")
     
     if 'df1' not in st.session_state or st.session_state.df1 is None:
-        st.markdown("""
-        <div class="insight-box">
-            <h4>No Data Loaded</h4>
-            <p>Please upload a CSV file using the upload center above to get started with the analysis.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.warning("Please upload a CSV file first.")
         return
 
     df1 = st.session_state.df1
 
-    # Professional metrics display
+    # Display basic dataset information
     col1, col2, col3, col4 = st.columns(4)
     
-    churn_count = df1['Churn'].value_counts()['Yes'] if 'Yes' in df1['Churn'].values else df1['Churn'].sum()
-    churn_rate = (churn_count / len(df1)) * 100
-    
     with col1:
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3 style="color: #3498db;">Total Customers</h3>
-            <h2 style="color: #2c3e50;">{len(df1):,}</h2>
-        </div>
-        """, unsafe_allow_html=True)
-    
+        st.metric("Total Customers", len(df1))
     with col2:
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3 style="color: #27ae60;">Features</h3>
-            <h2 style="color: #2c3e50;">{len(df1.columns)}</h2>
-        </div>
-        """, unsafe_allow_html=True)
-    
+        st.metric("Features", len(df1.columns))
     with col3:
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3 style="color: #e74c3c;">Churned Customers</h3>
-            <h2 style="color: #2c3e50;">{churn_count:,}</h2>
-        </div>
-        """, unsafe_allow_html=True)
-    
+        churn_count = df1['Churn'].value_counts()['Yes'] if 'Yes' in df1['Churn'].values else df1['Churn'].sum()
+        st.metric("Churned Customers", churn_count)
     with col4:
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3 style="color: #9b59b6;">Churn Rate</h3>
-            <h2 style="color: #2c3e50;">{churn_rate:.1f}%</h2>
-        </div>
-        """, unsafe_allow_html=True)
+        churn_rate = (churn_count / len(df1)) * 100
+        st.metric("Churn Rate", f"{churn_rate:.1f}%")
 
-    # Professional expandable sections
-    with st.expander("Dataset Preview", expanded=False):
-        st.dataframe(df1, use_container_width=True, height=400)
+    if st.checkbox('Preview Dataset'):
+        st.dataframe(df1, use_container_width=True)
     
-    with st.expander("Summary Statistics", expanded=False):
-        num_columns = df1[['tenure','MonthlyCharges']]
-        st.dataframe(num_columns.describe(), use_container_width=True)
+    if st.checkbox("Summary Statistics"):
+        if 'tenure' in df1.columns and 'MonthlyCharges' in df1.columns:
+            num_columns = df1[['tenure','MonthlyCharges']]
+            st.dataframe(num_columns.describe(), use_container_width=True)
 
-    with st.expander("Exploratory Data Analysis", expanded=True):
-        col1, col2 = st.columns(2)
+    if st.checkbox("Exploratory Data Analysis"):
+        col1, col2, col3 = st.columns(3)
 
         with col1:
-            # Professional churn distribution
+            # Churn distribution
             churn_counts = df1['Churn'].value_counts()
             fig_churn = px.pie(values=churn_counts.values, 
                               names=churn_counts.index,
                               title="Customer Churn Distribution",
-                              color_discrete_sequence=['#3498db', '#e74c3c'])
-            fig_churn.update_layout(title_font_size=16, font_size=12)
+                              color_discrete_sequence=['#90EE90', '#FF6B6B'])
             st.plotly_chart(fig_churn, use_container_width=True)
         
         with col2:
-            # Internet service analysis
-            fig_internet = px.bar(df1, x='InternetService', color='Churn', 
-                                title="Internet Service Distribution by Churn",
-                                color_discrete_sequence=['#27ae60', '#e74c3c'])
-            fig_internet.update_layout(title_font_size=16)
-            st.plotly_chart(fig_internet, use_container_width=True)
+            # Internet Service distribution by churn
+            if 'InternetService' in df1.columns:
+                fig_tenure1 = px.bar(df1, x='InternetService', color='Churn', 
+                                    title="Customer InternetService Distribution by Churn")
+                st.plotly_chart(fig_tenure1, use_container_width=True)   
 
+        # Additional visualizations
         col3, col4 = st.columns(2)
 
         with col3:
-            # Tenure distribution
-            fig_tenure = px.histogram(df1, x='tenure', color='Churn', 
-                                    title="Customer Tenure Distribution by Churn",
-                                    barmode='overlay', opacity=0.7,
-                                    color_discrete_sequence=['#27ae60', '#e74c3c'])
-            fig_tenure.update_layout(title_font_size=16)
-            st.plotly_chart(fig_tenure, use_container_width=True) 
+            # Tenure distribution by churn
+            if 'tenure' in df1.columns:
+                fig_tenure = px.histogram(df1, x='tenure', color='Churn', 
+                                        title="Customer Tenure Distribution by Churn",
+                                        barmode='overlay', opacity=0.7)
+                st.plotly_chart(fig_tenure, use_container_width=True) 
 
         with col4:
-            # Monthly charges
-            fig_charges = px.box(df1, x='Churn', y='MonthlyCharges',
-                               title="Monthly Charges by Churn Status",
-                               color='Churn',
-                               color_discrete_sequence=['#27ae60', '#e74c3c'])
-            fig_charges.update_layout(title_font_size=16)
-            st.plotly_chart(fig_charges, use_container_width=True)
+            # Monthly charges by churn
+            if 'MonthlyCharges' in df1.columns:
+                fig_charges = px.box(df1, x='Churn', y='MonthlyCharges',
+                                   title="Monthly Charges by Churn Status",
+                                   color='Churn')
+                st.plotly_chart(fig_charges, use_container_width=True) 
 
-        # Contract analysis
-        contract_churn = df1.groupby(['Contract', 'Churn']).size().reset_index(name='Count')
-        fig_contract = px.bar(contract_churn, x='Contract', y='Count', color='Churn',
-                 title="Churn Analysis by Contract Type", barmode='group',
-                 color_discrete_sequence=['#27ae60', '#e74c3c'])
-        fig_contract.update_layout(title_font_size=18, font_size=12)
-        st.plotly_chart(fig_contract, use_container_width=True)
+        # Contract type analysis
+        if 'Contract' in df1.columns:
+            contract_churn = df1.groupby(['Contract', 'Churn']).size().reset_index(name='Count')
+            fig = px.bar(contract_churn, x='Contract', y='Count', color='Churn',
+                     title="Churn by Contract Type", barmode='group',
+                     color_discrete_sequence=['#ff9999', '#66b3ff'])
+            st.plotly_chart(fig, use_container_width=True)
 
 def page2():
-    st.markdown("## Data Preprocessing")
+    st.subheader("Data Preprocessing")
 
-    if 'df1' not in st.session_state or st.session_state.df1 is None:
-        st.markdown("""
-        <div class="insight-box">
-            <h4>No Data Available</h4>
-            <p>Please upload your dataset first from the Home page.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        return
+    if st.checkbox('Check for null values'):
+        if 'df1' in st.session_state and st.session_state['df1'] is not None:
+            df1 = st.session_state['df1'].copy()
 
-    df1 = st.session_state.df1
+            # Replace common placeholders with NaN
+            null_placeholders = ["", " ", "NA", "N/A", "null", "Null", "NaN", "-", "--"]
+            df1.replace(to_replace=null_placeholders, value=np.nan, inplace=True)
 
-    # Professional tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["Data Quality Check", "Data Types Analysis", "Process Data", "Correlation Analysis"])
+            # Save cleaned data back to session
+            st.session_state['df1'] = df1
 
-    with tab1:
-        st.markdown("### Missing Values Analysis")
-        
-        df_clean = df1.copy()
-        null_placeholders = ["", " ", "NA", "N/A", "null", "Null", "NaN", "-", "--"]
-        df_clean.replace(to_replace=null_placeholders, value=np.nan, inplace=True)
-        st.session_state['df1'] = df_clean
+            # Compute missing values
+            missing_count = df1.isna().sum()
+            missing_percent = (missing_count / len(df1)) * 100
+            missing_df = pd.DataFrame({
+                "Missing Values": missing_count,
+                "Percent Missing": missing_percent.round(2)
+            })
+            missing_df = missing_df[missing_df["Missing Values"] > 0]
 
-        missing_count = df_clean.isna().sum()
-        missing_percent = (missing_count / len(df_clean)) * 100
-        missing_df = pd.DataFrame({
-            "Missing Values": missing_count,
-            "Percent Missing": missing_percent.round(2)
-        })
-        missing_df = missing_df[missing_df["Missing Values"] > 0]
+            if not missing_df.empty:
+                st.warning(f"Found {missing_df.shape[0]} columns with missing values.")
+                st.dataframe(missing_df)
+            else:
+                st.success("No missing values found!")
 
-        if not missing_df.empty:
-            st.warning(f"Found {missing_df.shape[0]} columns with missing values.")
-            st.dataframe(missing_df, use_container_width=True)
         else:
-            st.success("No missing values found!")
+            st.error("No dataset loaded. Please load the dataset first.")
 
-    with tab2:
-        st.markdown("### Data Types Overview")
-        data_types_df = pd.DataFrame({
-            'Column': df1.columns,
-            'Data Type': df1.dtypes,
-            'Unique Values': [df1[col].nunique() for col in df1.columns],
-            'Example Values': [str(df1[col].unique()[:3])[1:-1] for col in df1.columns]
-        })
-        st.dataframe(data_types_df, use_container_width=True)
+    # Data types analysis
+    if st.checkbox('Data Types Overview'):
+        if 'df1' in st.session_state and st.session_state['df1'] is not None:
+            df1= st.session_state['df1']
+            st.markdown("### Data Types Overview")
+            data_types_df = pd.DataFrame({
+                'Column': df1.columns,
+                'Data Type': df1.dtypes,
+                'Unique Values': [df1[col].nunique() for col in df1.columns],
+                'Example Values': [str(df1[col].unique()[:3])[1:-1] for col in df1.columns]
+            })
+            st.dataframe(data_types_df, use_container_width=True)
+        else:
+            st.error("No dataset loaded. Please load the dataset first.")
 
-    with tab3:
-        st.markdown("### Data Preprocessing")
-        
-        col1, col2 = st.columns([1, 2])
-        
-        with col1:
-            if st.button("Start Processing", type="primary"):
+    # Preprocessing steps
+    if st.checkbox('Preprocess Data'):
+        if 'df1' in st.session_state and st.session_state['df1'] is not None:
+            df1= st.session_state['df1']
+
+            if st.button("Start Preprocessing", type="primary"):
                 with st.spinner("Processing data..."):
                     processed_data, label_encoders = preprocess_data(df1)
                     st.session_state.processed_data = processed_data
                     st.session_state.label_encoders = label_encoders
-                st.success("Processing completed successfully!")
-        
-        with col2:
+
+                st.success("Data preprocessing completed!")
+
+                # Show preprocessing summary
+                st.markdown("### Preprocessing Summary:")
+                st.write("1. Converted TotalCharges to numeric format")
+                st.write("2. Handled missing values(if any) using median imputation")
+                st.write("3. Applied Label Encoding to categorical variables")
+
+            # Display processed data if available
             if st.session_state.processed_data is not None:
-                st.info("Processing Summary: TotalCharges converted, missing values handled, categorical encoding applied")
+                st.markdown("### Processed Data Preview")
 
-        if st.session_state.processed_data is not None:
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown("**Original Data:**")
-                st.dataframe(df1.head(), use_container_width=True)
-            with col2:
-                st.markdown("**Processed Data:**")
-                st.dataframe(st.session_state.processed_data.head(), use_container_width=True)
+                col1, col2 = st.columns(2)
 
-    with tab4:
-        st.markdown("### Feature Correlation Analysis")
-        
-        if st.session_state.processed_data is not None:
+                with col1:
+                    st.markdown("**Original Data:**")
+                    st.dataframe(df1.head(), use_container_width=True)
+
+                with col2:
+                    st.markdown("**Processed Data:**")
+                    st.dataframe(st.session_state.processed_data.head(), use_container_width=True)
+
+        else:
+            st.error("No dataset loaded. Please load the dataset first.")
+
+    if st.checkbox('Check Heat Map'):       
+        # Correlation heatmap of processed data
+        st.markdown("### Feature Correlation Analysis of Processed Data")
+
+        if 'processed_data' not in st.session_state or st.session_state.processed_data is None:
+            st.warning("Please preprocess data first.")
+        else:
             correlation_matrix_num = st.session_state.processed_data.select_dtypes(include='number')
             correlation_matrix = correlation_matrix_num.corr()
 
@@ -619,94 +366,89 @@ def page2():
                 correlation_matrix, 
                 text_auto=True, 
                 aspect="auto",
-                title="Feature Correlation Heatmap",
+                title="Feature Correlation Matrix",
                 color_continuous_scale='RdBu_r'
             )
-            fig.update_layout(height=700, title_font_size=18)
+            fig.update_layout(width=100, height=700)
             st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info("Please process the data first to view correlations.")
 
 def page3():
-    st.markdown("## Model Training")
-    
-    if st.session_state.processed_data is None:
-        st.markdown("""
-        <div class="insight-box">
-            <h4>Data Not Processed</h4>
-            <p>Please complete data preprocessing first.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        return
+    st.subheader("Model Training")
+    if st.session_state.processed_data is not None:
+        df2 = st.session_state.processed_data
 
-    df2 = st.session_state.processed_data
-
-    # Professional model configuration
-    st.markdown("### Model Configuration")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        <div class="metric-card">
-            <h4 style="color: #27ae60;">Random Forest Parameters</h4>
-        </div>
-        """, unsafe_allow_html=True)
+        # Feature selection
+        st.markdown("### Feature Selection")
         
-        n_estimators = st.slider("Number of Trees", 10, 200, 100, 10)
-        max_depth = st.slider("Max Depth", 3, 20, 10)
+        # Separate features and target
+        x_predict = df2.drop(['customerID', 'Churn'], axis=1, errors='ignore')
+        y_output = df2['Churn']
         
-    with col2:
-        st.markdown("""
-        <div class="metric-card">
-            <h4 style="color: #e74c3c;">SVM Parameters</h4>
-        </div>
-        """, unsafe_allow_html=True)
+        st.info(f"Training with {x_predict.shape[1]} features and {x_predict.shape[0]} samples")
         
-        svm_kernel = st.selectbox("Kernel", ['rbf', 'linear', 'poly'])
-        svm_C = st.slider("Regularization (C)", 0.1, 10.0, 1.0, 0.1)
-
-    # Train-test split configuration
-    col1, col2 = st.columns(2)
-    with col1:
-        test_size = st.slider("Test Size", 0.1, 0.5, 0.2, 0.05)
-    with col2:
+        # Train-test split
+        test_size = st.slider("Test Size (proportion)", 0.1, 0.5, 0.2, 0.05)
         random_state = st.number_input("Random State", value=40, min_value=0)
-
-    # Feature information
-    x_predict = df2.drop(['customerID', 'Churn'], axis=1)
-    y_output = df2['Churn']
-    
-    st.info(f"Training with {x_predict.shape[1]} features and {x_predict.shape[0]} samples")
-    
-    x_train, x_test, y_train, y_test = train_test_split(
-        x_predict, y_output, test_size=test_size, random_state=random_state, stratify=y_output
-    )
-
-    # Professional training button
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
+        
+        x_train, x_test, y_train, y_test = train_test_split(
+            x_predict, y_output, test_size=test_size, random_state=random_state, stratify=y_output
+        )
+        
+        st.success(f"Data split: {len(x_train)} training samples, {len(x_test)} testing samples")
+        
+        # Model configuration
+        st.markdown("### Model Configuration")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**Random Forest Parameters:**")
+            n_estimators = st.slider("Number of Trees", 10, 200, 100, 10)
+            max_depth = st.slider("Max Depth", 3, 20, 10)
+            rf_random_state = st.number_input("RF Random State", value=40, min_value=0)
+        
+        with col2:
+            st.markdown("**SVM Parameters:**")
+            svm_kernel = st.selectbox("Kernel", ['rbf', 'linear', 'poly'])
+            svm_C = st.slider("Regularization (C)", 0.1, 10.0, 1.0, 0.1)
+            svm_random_state = st.number_input("SVM Random State", value=40, min_value=0)
+        
+        # Train models
         if st.button("Train Models", type="primary"):
-            with st.spinner("Training models... Please wait..."):
+            with st.spinner("Training models... This may take sometime."):
                 
-                # Preprocessing
+                # Step 1: Impute missing values
                 imputer = SimpleImputer(strategy='most_frequent')
                 x_train_imputed = imputer.fit_transform(x_train)
                 x_test_imputed = imputer.transform(x_test)
 
+                # Step 2: Scale features for SVM
                 scaler = StandardScaler()
                 x_train_scaled = scaler.fit_transform(x_train_imputed)
                 x_test_scaled = scaler.transform(x_test_imputed)
 
-                # Train models
-                rf_model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state)
+                # Step 3: Train Random Forest
+                rf_model = RandomForestClassifier(
+                    n_estimators=n_estimators,
+                    max_depth=max_depth,
+                    random_state=rf_random_state
+                )
                 rf_model.fit(x_train_imputed, y_train)
 
-                svm_model = SVC(kernel=svm_kernel, C=svm_C, random_state=random_state, probability=True)
+                # Step 4: Train SVM
+                svm_model = SVC(
+                    kernel=svm_kernel,
+                    C=svm_C,
+                    random_state=svm_random_state,
+                    probability=True
+                )
                 svm_model.fit(x_train_scaled, y_train)
 
-                # Store results
-                st.session_state.models = {'Random Forest': rf_model, 'SVM': svm_model}
+                # Step 5: Store models and preprocessing objects
+                st.session_state.models = {
+                    'Random Forest': rf_model,
+                    'SVM': svm_model
+                }
                 st.session_state.imputer = imputer
                 st.session_state.scaler = scaler
                 st.session_state.X_train = x_train
@@ -717,42 +459,32 @@ def page3():
                 st.session_state.X_test_scaled = x_test_scaled
                 st.session_state.feature_names = x_predict.columns.tolist()
 
-            st.success("Models trained successfully!")
+                st.success("Models trained successfully!")
 
-    # Model information
-    if st.session_state.models:
-        st.markdown("### Model Summary")
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("""
-            <div class="insight-box">
-                <h4>Random Forest</h4>
-                <ul>
-                    <li>Ensemble method using multiple decision trees</li>
-                    <li>Handles feature interactions well</li>
-                    <li>Provides feature importance scores</li>
-                    <li>Less prone to overfitting</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
-            
-        with col2:
-            st.markdown("""
-            <div class="insight-box">
-                <h4>Support Vector Machine</h4>
-                <ul>
-                    <li>Finds optimal decision boundary</li>
-                    <li>Works well with high-dimensional data</li>
-                    <li>Uses kernel trick for non-linear patterns</li>
-                    <li>Requires feature scaling</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            # Display model information
+            st.markdown("### Model Summary")
 
-        # Feature importance
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown("""
+                **Random Forest:**
+                - Ensemble method using multiple decision trees  
+                - Handles feature interactions well  
+                - Provides feature importance scores  
+                - Less prone to overfitting
+                """)
+            with col2:
+                st.markdown("""
+                **Support Vector Machine:**
+                - Finds optimal decision boundary  
+                - Works well with high-dimensional data  
+                - Uses kernel trick for non-linear patterns  
+                - Requires feature scaling
+                """)
+
+        # Feature importance (if Random Forest is trained)
         if 'Random Forest' in st.session_state.models:
-            st.markdown("### Feature Importance Analysis")
+            st.markdown("### Feature Importance (Random Forest)")
             rf_model = st.session_state.models['Random Forest']
             feature_importance = pd.DataFrame({
                 'Feature': st.session_state.feature_names,
@@ -760,120 +492,121 @@ def page3():
             }).sort_values('Importance', ascending=False)
 
             fig_importance = px.bar(
-                feature_importance.head(10),
+                feature_importance,
                 x='Importance', y='Feature',
                 orientation='h',
-                title="Top 10 Most Important Features",
-                color='Importance',
-                color_continuous_scale='viridis'
+                title="Order of Importance of Features",
             )
-            fig_importance.update_layout(yaxis={'categoryorder': 'total ascending'}, title_font_size=16)
+            fig_importance.update_layout(yaxis={'categoryorder': 'total ascending'})
             st.plotly_chart(fig_importance, use_container_width=True)
 
-def page4():
-    st.markdown("## Model Evaluation")
-    
-    if not st.session_state.models:
-        st.markdown("""
-        <div class="insight-box">
-            <h4>No Models Available</h4>
-            <p>Please train models first in the Model Training section.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        return
-        
-    # Calculate metrics
-    results = {}
-    
-    for model_name, model in st.session_state.models.items():
-        X_test_input = st.session_state.X_test if model_name == 'Random Forest' else st.session_state.X_test_scaled
-        
-        y_pred = model.predict(X_test_input)
-        y_pred_proba = model.predict_proba(X_test_input)[:, 1]
-        
-        metrics = {
-            'Accuracy': accuracy_score(st.session_state.y_test, y_pred),
-            'Precision': precision_score(st.session_state.y_test, y_pred),
-            'Recall': recall_score(st.session_state.y_test, y_pred),
-            'F1-Score': f1_score(st.session_state.y_test, y_pred),
-            'ROC-AUC': roc_auc_score(st.session_state.y_test, y_pred_proba)
-        }
-        
-        results[model_name] = {
-            'predictions': y_pred,
-            'probabilities': y_pred_proba,
-            'metrics': metrics
-        }
-    
-    st.session_state.model_metrics = results
-    
-    # Professional metrics display
-    st.markdown("### Performance Comparison")
-    
-    metrics_df = pd.DataFrame({
-        model_name: result['metrics'] 
-        for model_name, result in results.items()
-    }).T
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.dataframe(metrics_df.round(4), use_container_width=True)
-    
-    with col2:
-        # Best model recommendation
-        overall_scores = {}
-        for model_name, result in results.items():
-            metrics = result['metrics']
-            overall_score = sum(metrics.values()) / len(metrics)
-            overall_scores[model_name] = overall_score
-        
-        best_model = max(overall_scores, key=overall_scores.get)
-        
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3 style="color: #27ae60;">Best Performing Model</h3>
-            <h2 style="color: #2c3e50;">{best_model}</h2>
-            <p>Overall Score: {overall_scores[best_model]:.4f}</p>
-        </div>
-        """, unsafe_allow_html=True)
+        if 'SVM' in st.session_state.models:
+            svm_model = st.session_state.models['SVM']
 
-    # Visual comparison
-    fig_metrics = px.bar(metrics_df.reset_index(), 
-                       x='index', y=['Accuracy', 'Precision', 'Recall', 'F1-Score', 'ROC-AUC'],
-                       title="Model Performance Metrics Comparison",
-                       barmode='group',
-                       color_discrete_sequence=['#3498db', '#e74c3c', '#27ae60', '#f39c12', '#9b59b6'])
-    fig_metrics.update_layout(xaxis_title="Models", yaxis_title="Score", title_font_size=18)
-    st.plotly_chart(fig_metrics, use_container_width=True)
+            # Ensure this is only done for linear kernel
+            if svm_model.kernel == 'linear':
+                st.markdown("### Feature Importance (SVM - Linear Kernel)")
+
+                coef = svm_model.coef_[0]  # For binary classification
+                feature_importance_svm = pd.DataFrame({
+                    'Feature': st.session_state.feature_names,
+                    'Importance': np.abs(coef)  # Absolute importance
+                }).sort_values('Importance', ascending=True)
+
+                fig_svm_importance = px.bar(
+                    feature_importance_svm,
+                    x='Importance', y='Feature',
+                    orientation='h',
+                    title="Order of Importance of Features"
+                )
+                fig_svm_importance.update_layout(
+                    yaxis=dict(categoryorder='total ascending'),
+                    xaxis_title='Absolute Coefficient Value',
+                    yaxis_title='Feature',
+                    title_x=0.5
+                )
+                st.plotly_chart(fig_svm_importance, use_container_width=True)
     
-    # Professional tabs for detailed analysis
-    tab1, tab2, tab3 = st.tabs(["Confusion Matrix", "ROC Curves", "Classification Reports"])
-    
-    with tab1:
+    else:
+        st.error("No processed data available. Please complete the data preprocessing step first.")
+
+def page4():
+    st.subheader("Model Evaluation")
+    if st.session_state.models:
+        
+        # Calculate predictions and metrics for both models
+        results = {}
+        
+        for model_name, model in st.session_state.models.items():
+            if model_name == 'Random Forest':
+                X_test_input = st.session_state.imputer.transform(st.session_state.X_test)
+            else:  # SVM
+                X_test_input = st.session_state.X_test_scaled
+            
+            y_pred = model.predict(X_test_input)
+            y_pred_proba = model.predict_proba(X_test_input)[:, 1]
+            
+            # Calculate metrics
+            metrics = {
+                'Accuracy': accuracy_score(st.session_state.y_test, y_pred),
+                'Precision': precision_score(st.session_state.y_test, y_pred),
+                'Recall': recall_score(st.session_state.y_test, y_pred),
+                'F1-Score': f1_score(st.session_state.y_test, y_pred),
+                'ROC-AUC': roc_auc_score(st.session_state.y_test, y_pred_proba)
+            }
+            
+            results[model_name] = {
+                'predictions': y_pred,
+                'probabilities': y_pred_proba,
+                'metrics': metrics
+            }
+        
+        # Store results for prediction page
+        st.session_state.model_metrics = results
+        
+        # Display metrics comparison
+        st.markdown("### Model Performance Comparison")
+        
+        metrics_df = pd.DataFrame({
+            model_name: result['metrics'] 
+            for model_name, result in results.items()
+        }).T
+        
+        st.dataframe(metrics_df.round(4), use_container_width=True)
+        
+        # Visual metrics comparison
+        fig_metrics = px.bar(metrics_df.reset_index(), 
+                           x='index', y=['Accuracy', 'Precision', 'Recall', 'F1-Score', 'ROC-AUC'],
+                           title="Model Performance Metrics Comparison",
+                           barmode='group')
+        fig_metrics.update_layout(xaxis_title="Models", yaxis_title="Score")
+        st.plotly_chart(fig_metrics, use_container_width=True)
+        
+        # Confusion Matrices
+        st.markdown("### Confusion Matrices")
+        
         col1, col2 = st.columns(2)
         
         for i, (model_name, result) in enumerate(results.items()):
             cm = confusion_matrix(st.session_state.y_test, result['predictions'])
             
             fig_cm = px.imshow(cm, text_auto=True, aspect="auto",
-                              title=f"{model_name} Confusion Matrix",
+                              title=f"Confusion Matrix - {model_name}",
                               labels=dict(x="Predicted", y="Actual"),
                               x=['No Churn', 'Churn'],
-                              y=['No Churn', 'Churn'],
-                              color_continuous_scale='Blues')
-            fig_cm.update_layout(title_font_size=16)
+                              y=['No Churn', 'Churn'])
             
             if i == 0:
                 col1.plotly_chart(fig_cm, use_container_width=True)
             else:
                 col2.plotly_chart(fig_cm, use_container_width=True)
-    
-    with tab2:
+        
+        # ROC Curves
+        st.markdown("### ROC Curves Comparison")
+        
         fig_roc = go.Figure()
         
-        colors = ['#3498db', '#e74c3c']
-        for i, (model_name, result) in enumerate(results.items()):
+        for model_name, result in results.items():
             fpr, tpr, _ = roc_curve(st.session_state.y_test, result['probabilities'])
             auc_score = auc(fpr, tpr)
             
@@ -881,9 +614,10 @@ def page4():
                 x=fpr, y=tpr,
                 mode='lines',
                 name=f'{model_name} (AUC = {auc_score:.3f})',
-                line=dict(width=3, color=colors[i])
+                line=dict(width=3)
             ))
         
+        # Add diagonal line
         fig_roc.add_trace(go.Scatter(
             x=[0, 1], y=[0, 1],
             mode='lines',
@@ -895,13 +629,34 @@ def page4():
             title='ROC Curves Comparison',
             xaxis_title='False Positive Rate',
             yaxis_title='True Positive Rate',
-            title_font_size=18,
-            height=500
+            width=800, height=500
         )
         
         st.plotly_chart(fig_roc, use_container_width=True)
-    
-    with tab3:
+        
+        # Best model recommendation
+        st.markdown("### Model Recommendation")
+        
+        # Calculate overall score (weighted average of metrics)
+        overall_scores = {}
+        for model_name, result in results.items():
+            metrics = result['metrics']
+            # Weight: Accuracy(0.2) + Precision(0.2) + Recall(0.2) + F1(0.2) + ROC-AUC(0.2)
+            overall_score = (metrics['Accuracy'] * 0.2 + 
+                           metrics['Precision'] * 0.2 + 
+                           metrics['Recall'] * 0.2 + 
+                           metrics['F1-Score'] * 0.2 + 
+                           metrics['ROC-AUC'] * 0.2)
+            overall_scores[model_name] = overall_score
+        
+        best_model = max(overall_scores, key=overall_scores.get)
+        
+        st.success(f"**Recommended Model: {best_model}**")
+        st.info(f"Overall Score: {overall_scores[best_model]:.4f}")
+        
+        # Detailed classification reports
+        st.markdown("### Detailed Classification Reports")
+        
         for model_name, result in results.items():
             with st.expander(f"{model_name} Classification Report"):
                 report = classification_report(
@@ -911,658 +666,617 @@ def page4():
                 )
                 report_df = pd.DataFrame(report).transpose()
                 st.dataframe(report_df.round(4), use_container_width=True)
+    
+    else:
+        st.error("No trained models available. Please complete the model training step first.")
 
 def page5():
-    st.markdown("## Prediction Interface")
+    st.subheader("Prediction Interface")
 
-    if not st.session_state.models:
-        st.markdown("""
-        <div class="insight-box">
-            <h4>Models Not Available</h4>
-            <p>Please train models first in the Model Training section.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        return
-
-    st.markdown("""
-    <div class="team-card">
-        <h3>Customer Information Input</h3>
-        <p>Enter customer details below to predict churn probability</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Professional input form
-    with st.form("prediction_form"):
-        col1, col2, col3 = st.columns(3)
+    if st.session_state.models:
+        st.markdown("### Enter Customer Information")
         
-        with col1:
-            st.markdown("**Demographics**")
-            gender = st.selectbox("Gender", ["Female", "Male"])
-            senior_citizen = st.selectbox("Senior Citizen", ["No", "Yes"])
-            partner = st.selectbox("Has Partner", ["No", "Yes"])
-            dependents = st.selectbox("Has Dependents", ["No", "Yes"])
-            tenure = st.number_input("Tenure (months)", min_value=0, max_value=100, value=12)
+        # Create input form with organized layout
+        with st.form("prediction_form"):
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.markdown("**Demographics**")
+                gender = st.selectbox("Gender", ["Female", "Male"])
+                senior_citizen = st.selectbox("Senior Citizen", ["No", "Yes"])
+                partner = st.selectbox("Has Partner", ["No", "Yes"])
+                dependents = st.selectbox("Has Dependents", ["No", "Yes"])
+                tenure = st.number_input("Tenure (months)", min_value=0, max_value=100, value=12)
+            
+            with col2:
+                st.markdown("**Services**")
+                phone_service = st.selectbox("Phone Service", ["No", "Yes"])
+                multiple_lines = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
+                internet_service = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
+                online_security = st.selectbox("Online Security", ["No", "Yes", "No internet service"])
+                online_backup = st.selectbox("Online Backup", ["No", "Yes", "No internet service"])
+            
+            with col3:
+                st.markdown("**Additional Services**")
+                device_protection = st.selectbox("Device Protection", ["No", "Yes", "No internet service"])
+                tech_support = st.selectbox("Tech Support", ["No", "Yes", "No internet service"])
+                streaming_tv = st.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
+                streaming_movies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown("**Billing Information**")
+                contract = st.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
+                paperless_billing = st.selectbox("Paperless Billing", ["No", "Yes"])
+                payment_method = st.selectbox("Payment Method", 
+                                            ["Electronic check", "Mailed check", 
+                                             "Bank transfer (automatic)", "Credit card (automatic)"])
+            
+            with col2:
+                st.markdown("**Charges**")
+                monthly_charges = st.number_input("Monthly Charges ($)", min_value=0.0, max_value=200.0, value=50.0)
+                total_charges = st.number_input("Total Charges ($)", min_value=0.0, max_value=10000.0, value=500.0)
+            
+            # Model selection
+            selected_model = st.selectbox("Choose Prediction Model", list(st.session_state.models.keys()))
+            
+            predict_button = st.form_submit_button("Predict Churn", type="primary")
         
-        with col2:
-            st.markdown("**Services**")
-            phone_service = st.selectbox("Phone Service", ["No", "Yes"])
-            multiple_lines = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
-            internet_service = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
-            online_security = st.selectbox("Online Security", ["No", "Yes", "No internet service"])
-            online_backup = st.selectbox("Online Backup", ["No", "Yes", "No internet service"])
-        
-        with col3:
-            st.markdown("**Additional Services**")
-            device_protection = st.selectbox("Device Protection", ["No", "Yes", "No internet service"])
-            tech_support = st.selectbox("Tech Support", ["No", "Yes", "No internet service"])
-            streaming_tv = st.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
-            streaming_movies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("**Billing Information**")
-            contract = st.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
-            paperless_billing = st.selectbox("Paperless Billing", ["No", "Yes"])
-            payment_method = st.selectbox("Payment Method", 
-                                        ["Electronic check", "Mailed check", 
-                                         "Bank transfer (automatic)", "Credit card (automatic)"])
-        
-        with col2:
-            st.markdown("**Charges**")
-            monthly_charges = st.number_input("Monthly Charges ($)", min_value=0.0, max_value=200.0, value=50.0)
-            total_charges = st.number_input("Total Charges ($)", min_value=0.0, max_value=10000.0, value=500.0)
-        
-        # Model selection
-        selected_model = st.selectbox("Choose Prediction Model", list(st.session_state.models.keys()))
-        
-        predict_button = st.form_submit_button("Predict Churn Risk", type="primary")
-    
-    if predict_button:
-        # Prepare input data
-        input_data = {
-            'gender': 1 if gender == "Male" else 0,
-            'SeniorCitizen': 1 if senior_citizen == "Yes" else 0,
-            'Partner': 1 if partner == "Yes" else 0,
-            'Dependents': 1 if dependents == "Yes" else 0,
-            'tenure': tenure,
-            'PhoneService': 1 if phone_service == "Yes" else 0,
-            'MultipleLines': 0 if multiple_lines == "No" else (1 if multiple_lines == "Yes" else 2),
-            'InternetService': 0 if internet_service == "DSL" else (1 if internet_service == "Fiber optic" else 2),
-            'OnlineSecurity': 0 if online_security == "No" else (1 if online_security == "Yes" else 2),
-            'OnlineBackup': 0 if online_backup == "No" else (1 if online_backup == "Yes" else 2),
-            'DeviceProtection': 0 if device_protection == "No" else (1 if device_protection == "Yes" else 2),
-            'TechSupport': 0 if tech_support == "No" else (1 if tech_support == "Yes" else 2),
-            'StreamingTV': 0 if streaming_tv == "No" else (1 if streaming_tv == "Yes" else 2),
-            'StreamingMovies': 0 if streaming_movies == "No" else (1 if streaming_movies == "Yes" else 2),
-            'Contract': 0 if contract == "Month-to-month" else (1 if contract == "One year" else 2),
-            'PaperlessBilling': 1 if paperless_billing == "Yes" else 0,
-            'PaymentMethod': {"Electronic check": 0, "Mailed check": 1, 
-                            "Bank transfer (automatic)": 2, "Credit card (automatic)": 3}[payment_method],
-            'MonthlyCharges': monthly_charges,
-            'TotalCharges': total_charges
-        }
-        
-        # Convert to DataFrame
-        input_df = pd.DataFrame([input_data])
-        
-        # Make prediction
-        model = st.session_state.models[selected_model]
-        
-        if selected_model == "SVM":
-            input_scaled = st.session_state.scaler.transform(input_df)
-            prediction = model.predict(input_scaled)[0]
-            probability = model.predict_proba(input_scaled)[0]
-        else:  # Random Forest
-            prediction = model.predict(input_df)[0]
-            probability = model.predict_proba(input_df)[0]
-        
-        # Professional prediction results
-        st.markdown("### Prediction Results")
-        
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            churn_prob = probability[1] * 100
-            if prediction == 1:
-                st.markdown(f"""
-                <div class="status-high">
-                    <h2>HIGH RISK</h2>
-                    <h3>Customer Likely to Churn</h3>
-                    <h1>{churn_prob:.1f}%</h1>
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                st.markdown(f"""
-                <div class="status-low">
-                    <h2>LOW RISK</h2>
-                    <h3>Customer Likely to Stay</h3>
-                    <h1>{churn_prob:.1f}%</h1>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        with col2:
-            # Professional risk gauge
-            fig_gauge = go.Figure(go.Indicator(
-                mode = "gauge+number",
-                value = churn_prob,
-                domain = {'x': [0, 1], 'y': [0, 1]},
-                title = {'text': "Churn Probability (%)"},
-                gauge = {
-                    'axis': {'range': [None, 100]},
-                    'bar': {'color': "#34495e"},
-                    'steps': [
-                        {'range': [0, 30], 'color': "#27ae60"},
-                        {'range': [30, 70], 'color': "#f39c12"},
-                        {'range': [70, 100], 'color': "#e74c3c"}],
-                    'threshold': {
-                        'line': {'color': "#e74c3c", 'width': 4},
-                        'thickness': 0.75,
-                        'value': 70}}))
-            fig_gauge.update_layout(height=300)
-            st.plotly_chart(fig_gauge, use_container_width=True)
-        
-        with col3:
-            # Professional recommendations
+        if predict_button:
+            # Prepare input data
+            input_data = {
+                'gender': 1 if gender == "Male" else 0,
+                'SeniorCitizen': 1 if senior_citizen == "Yes" else 0,
+                'Partner': 1 if partner == "Yes" else 0,
+                'Dependents': 1 if dependents == "Yes" else 0,
+                'tenure': tenure,
+                'PhoneService': 1 if phone_service == "Yes" else 0,
+                'MultipleLines': 0 if multiple_lines == "No" else (1 if multiple_lines == "Yes" else 2),
+                'InternetService': 0 if internet_service == "DSL" else (1 if internet_service == "Fiber optic" else 2),
+                'OnlineSecurity': 0 if online_security == "No" else (1 if online_security == "Yes" else 2),
+                'OnlineBackup': 0 if online_backup == "No" else (1 if online_backup == "Yes" else 2),
+                'DeviceProtection': 0 if device_protection == "No" else (1 if device_protection == "Yes" else 2),
+                'TechSupport': 0 if tech_support == "No" else (1 if tech_support == "Yes" else 2),
+                'StreamingTV': 0 if streaming_tv == "No" else (1 if streaming_tv == "Yes" else 2),
+                'StreamingMovies': 0 if streaming_movies == "No" else (1 if streaming_movies == "Yes" else 2),
+                'Contract': 0 if contract == "Month-to-month" else (1 if contract == "One year" else 2),
+                'PaperlessBilling': 1 if paperless_billing == "Yes" else 0,
+                'PaymentMethod': {"Electronic check": 0, "Mailed check": 1, 
+                                "Bank transfer (automatic)": 2, "Credit card (automatic)": 3}[payment_method],
+                'MonthlyCharges': monthly_charges,
+                'TotalCharges': total_charges
+            }
+            
+            # Convert to DataFrame
+            input_df = pd.DataFrame([input_data])
+            
+            # Make prediction
+            model = st.session_state.models[selected_model]
+            
+            if selected_model == "SVM":
+                input_processed = st.session_state.imputer.transform(input_df)
+                input_scaled = st.session_state.scaler.transform(input_processed)
+                prediction = model.predict(input_scaled)[0]
+                probability = model.predict_proba(input_scaled)[0]
+            else:  # Random Forest
+                input_processed = st.session_state.imputer.transform(input_df)
+                prediction = model.predict(input_processed)[0]
+                probability = model.predict_proba(input_processed)[0]
+            
+            # Display prediction results
+            st.markdown("### Prediction Results")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                if prediction == 1:
+                    st.error("**HIGH RISK: Customer likely to CHURN**")
+                    risk_level = "HIGH"
+                    risk_color = "#ff4444"
+                else:
+                    st.success("**LOW RISK: Customer likely to STAY**")
+                    risk_level = "LOW"
+                    risk_color = "#44ff44"
+            
+            with col2:
+                churn_prob = probability[1] * 100
+                st.metric("Churn Probability", f"{churn_prob:.2f}%")
+            
+            # Risk assessment and recommendations
+            st.markdown("### Risk Assessment & Recommendations")
+            
             if churn_prob > 70:
                 st.markdown("""
-                <div class="insight-box">
-                    <h4>URGENT ACTIONS REQUIRED</h4>
-                    <ul>
-                        <li>Contact customer within 24 hours</li>
-                        <li>Offer personalized retention package</li>
-                        <li>Investigate service issues immediately</li>
-                        <li>Consider contract upgrade incentives</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
+                **HIGH RISK**
+                - Contact customer within 24 hours
+                - Offer personalized retention package
+                - Investigate service issues
+                - Consider contract upgrade incentives
+                """)
             elif churn_prob > 40:
                 st.markdown("""
-                <div class="insight-box">
-                    <h4>PROACTIVE MEASURES RECOMMENDED</h4>
-                    <ul>
-                        <li>Send customer satisfaction survey</li>
-                        <li>Offer service upgrades or add-ons</li>
-                        <li>Provide loyalty rewards or discounts</li>
-                        <li>Monitor usage patterns closely</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
+                **MODERATE RISK**
+                - Send satisfaction survey
+                - Offer service upgrades
+                - Provide loyalty rewards
+                - Monitor usage patterns
+                """)
             else:
                 st.markdown("""
-                <div class="insight-box">
-                    <h4>MAINTENANCE ACTIONS</h4>
-                    <ul>
-                        <li>Continue providing excellent service</li>
-                        <li>Explore upselling opportunities</li>
-                        <li>Conduct regular satisfaction checks</li>
-                        <li>Consider referral program enrollment</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        # Feature impact analysis
-        if selected_model == "Random Forest":
-            st.markdown("### Key Factors Influencing This Prediction")
+                **LOW RISK**
+                - Continue excellent service
+                - Opportunity for upselling
+                - Regular satisfaction check
+                - Consider referral programs
+                """)
             
-            rf_model = st.session_state.models['Random Forest']
-            feature_importance = pd.DataFrame({
-                'Feature': st.session_state.feature_names,
-                'Importance': rf_model.feature_importances_,
-                'Customer_Value': [input_data[feature] for feature in st.session_state.feature_names]
-            }).sort_values('Importance', ascending=False).head(8)
-            
-            fig_factors = px.bar(feature_importance, 
-                               x='Importance', y='Feature',
-                               orientation='h',
-                               title="Most Influential Factors for This Customer",
-                               color='Importance',
-                               color_continuous_scale='viridis')
-            fig_factors.update_layout(yaxis={'categoryorder':'total ascending'}, title_font_size=16)
-            st.plotly_chart(fig_factors, use_container_width=True)
+            # Feature impact analysis (for Random Forest)
+            if selected_model == "Random Forest" and 'feature_names' in st.session_state:
+                st.markdown("### Key Factors Influencing This Prediction")
+                
+                # Get feature importance for this specific prediction
+                rf_model = st.session_state.models['Random Forest']
+                feature_importance = pd.DataFrame({
+                    'Feature': st.session_state.feature_names,
+                    'Importance': rf_model.feature_importances_,
+                    'Customer_Value': [input_data.get(feature, 0) for feature in st.session_state.feature_names]
+                }).sort_values('Importance', ascending=False).head(8)
+                
+                fig_factors = px.bar(feature_importance, 
+                                   x='Importance', y='Feature',
+                                   orientation='h',
+                                   title="Most Influential Factors for This Customer",
+                                   color='Importance',
+                                   color_continuous_scale='plasma')
+                fig_factors.update_layout(yaxis={'categoryorder':'total ascending'})
+                st.plotly_chart(fig_factors, use_container_width=True)
+    
+    else:
+        st.error("No trained models available. Please complete the model training step first.")
 
 def page6():
-    st.markdown("## Business Insights & Strategic Recommendations")
-    
-    if st.session_state.df1 is None:
-        st.markdown("""
-        <div class="insight-box">
-            <h4>No Data Available</h4>
-            <p>Please upload your dataset to view business insights.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        return
+    st.subheader("Insights & Conclusions")
+    if st.session_state.df1 is not None:
+        data = st.session_state.df1
 
-    data = st.session_state.df1
+        # Calculate financial impact
+        total_customers1 = len(data)
+        churned_customers1 = len(data[data['Churn'] == 'Yes'])
+        monthly_revenue_lost1 = data[data['Churn'] == 'Yes']['MonthlyCharges'].sum()
+        annual_revenue_lost1 = monthly_revenue_lost1 * 12
+        churn_rate1 = (data['Churn'] == 'Yes').mean() * 100
+        
+        # Final summary
+        st.markdown("### Executive Summary")
+        
+        st.markdown(f"""
+        **Project Outcome Summary**
+        - Analyzed {len(data):,} customer records with {churn_rate1:.1f}% churn rate
+        - Identified ${annual_revenue_lost1:,.0f} in annual revenue at risk
+        - Achieved high accuracy in churn prediction with actionable insights
+        - Enabled proactive customer retention with potential 5-15% churn reduction
+        """)
 
-    # Executive summary
-    total_customers1 = len(data)
-    churned_customers1 = len(data[data['Churn'] == 'Yes'])
-    monthly_revenue_lost1 = data[data['Churn'] == 'Yes']['MonthlyCharges'].sum()
-    annual_revenue_lost1 = monthly_revenue_lost1 * 12
-    churn_rate1 = (data['Churn'] == 'Yes').mean() * 100
-    
-    st.markdown(f"""
-    <div class="team-card">
-        <h2>Executive Summary</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
-            <div>Analyzed {len(data):,} customer records</div>
-            <div>Identified {churn_rate1:.1f}% churn rate</div>
-            <div>${annual_revenue_lost1:,.0f} annual revenue at risk</div>
-            <div>Achieved high prediction accuracy</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Key metrics
-    churn_rate = (data['Churn'] == 'Yes').mean() * 100
-    avg_tenure_churn = data[data['Churn'] == 'Yes']['tenure'].mean()
-    avg_tenure_stay = data[data['Churn'] == 'No']['tenure'].mean()
-    avg_monthly_churn = data[data['Churn'] == 'Yes']['MonthlyCharges'].mean()
-    avg_monthly_stay = data[data['Churn'] == 'No']['MonthlyCharges'].mean()
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    metrics_data = [
-        ("Churn Rate", f"{churn_rate:.1f}%", "#e74c3c"),
-        ("Avg Tenure (Churned)", f"{avg_tenure_churn:.1f} months", "#f39c12"),
-        ("Avg Monthly (Churned)", f"${avg_monthly_churn:.2f}", "#9b59b6"),
-        ("Annual Revenue Risk", f"${len(data[data['Churn'] == 'Yes']) * avg_monthly_churn * 12:,.0f}", "#34495e")
-    ]
-    
-    for i, (metric, value, color) in enumerate(metrics_data):
-        with [col1, col2, col3, col4][i]:
-            st.markdown(f"""
-            <div class="metric-card">
-                <h4 style="color: {color};">{metric}</h4>
-                <h2 style="color: #2c3e50;">{value}</h2>
-            </div>
-            """, unsafe_allow_html=True)
-
-    # Professional analysis tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["Churn Drivers", "Financial Impact", "Strategic Recommendations", "Model Performance"])
-    
-    with tab1:
-        st.markdown("### Primary Churn Drivers Analysis")
+        # Business insights from data analysis
+        st.markdown("### Key Business Insights")
         
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            contract_churn = data.groupby('Contract')['Churn'].apply(lambda x: (x == 'Yes').mean() * 100)
-            fig_contract = px.bar(x=contract_churn.index, y=contract_churn.values,
-                                title="Churn Rate by Contract Type",
-                                labels={'x': 'Contract Type', 'y': 'Churn Rate (%)'},
-                                color=contract_churn.values,
-                                color_continuous_scale='Reds')
-            fig_contract.update_layout(title_font_size=16)
-            st.plotly_chart(fig_contract, use_container_width=True)
-        
-        with col2:
-            payment_churn = data.groupby('PaymentMethod')['Churn'].apply(lambda x: (x == 'Yes').mean() * 100)
-            fig_payment = px.bar(x=payment_churn.index, y=payment_churn.values,
-                               title="Churn Rate by Payment Method",
-                               labels={'x': 'Payment Method', 'y': 'Churn Rate (%)'},
-                               color=payment_churn.values,
-                               color_continuous_scale='Reds')
-            fig_payment.update_xaxes(tickangle=45)
-            fig_payment.update_layout(title_font_size=16)
-            st.plotly_chart(fig_payment, use_container_width=True)
-        
-        st.markdown("""
-        <div class="insight-box">
-            <h4>Key Findings</h4>
-            <ul>
-                <li>Month-to-month contracts show significantly higher churn risk</li>
-                <li>Electronic check payments correlate with increased churn probability</li>
-                <li>Fiber optic customers demonstrate varied retention patterns</li>
-                <li>Senior citizens exhibit distinct churn behaviors requiring targeted approaches</li>
-                <li>New customers (low tenure) represent the highest risk segment</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab2:
-        st.markdown("### Financial Impact Analysis")
-        
-        # Financial calculations
-        total_customers = len(data)
-        churned_customers = len(data[data['Churn'] == 'Yes'])
-        monthly_revenue_lost = data[data['Churn'] == 'Yes']['MonthlyCharges'].sum()
-        annual_revenue_lost = monthly_revenue_lost * 12
-        estimated_cac = 200
-        total_acquisition_cost = churned_customers * estimated_cac
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown(f"""
-            <div class="metric-card">
-                <h4>Financial Impact Summary</h4>
-                <ul>
-                    <li>Customers Lost: {churned_customers:,}</li>
-                    <li>Monthly Revenue Lost: ${monthly_revenue_lost:,.2f}</li>
-                    <li>Annual Revenue Lost: ${annual_revenue_lost:,.2f}</li>
-                    <li>Customer Acquisition Cost: ${total_acquisition_cost:,.2f}</li>
-                    <li><strong>Total Annual Impact: ${annual_revenue_lost + total_acquisition_cost:,.2f}</strong></li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col2:
-            impact_data = pd.DataFrame({
-                'Category': ['Revenue Lost', 'Acquisition Cost'],
-                'Amount': [annual_revenue_lost, total_acquisition_cost]
-            })
-            
-            fig_impact = px.pie(impact_data, values='Amount', names='Category',
-                              title="Annual Financial Impact Breakdown",
-                              color_discrete_sequence=['#e74c3c', '#f39c12'])
-            fig_impact.update_layout(title_font_size=16)
-            st.plotly_chart(fig_impact, use_container_width=True)
-        
-        # ROI scenarios
-        st.markdown("### Return on Investment Potential")
-        
-        retention_scenarios = pd.DataFrame({
-            'Scenario': ['5% Reduction', '10% Reduction', '15% Reduction'],
-            'Customers_Saved': [churned_customers * 0.05, churned_customers * 0.10, churned_customers * 0.15],
-            'Annual_Savings': [annual_revenue_lost * 0.05, annual_revenue_lost * 0.10, annual_revenue_lost * 0.15]
-        })
-        
-        fig_roi = px.bar(retention_scenarios, x='Scenario', y='Annual_Savings',
-                       title="Potential Annual Savings from Churn Reduction",
-                       color='Annual_Savings',
-                       color_continuous_scale='Greens')
-        fig_roi.update_layout(yaxis_title="Annual Savings ($)", title_font_size=16)
-        st.plotly_chart(fig_roi, use_container_width=True)
-    
-    with tab3:
-        st.markdown("### Strategic Recommendations")
+        # Calculate key statistics
+        churn_rate = (data['Churn'] == 'Yes').mean() * 100
+        avg_tenure_churn = data[data['Churn'] == 'Yes']['tenure'].mean()
+        avg_tenure_stay = data[data['Churn'] == 'No']['tenure'].mean()
+        avg_monthly_churn = data[data['Churn'] == 'Yes']['MonthlyCharges'].mean()
+        avg_monthly_stay = data[data['Churn'] == 'No']['MonthlyCharges'].mean()
         
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.markdown("""
-            <div class="insight-box">
-                <h4>Immediate Actions (0-30 days)</h4>
-                <ul>
-                    <li>Target high-risk customer segments with personalized outreach</li>
-                    <li>Implement automatic payment incentives</li>
-                    <li>Establish proactive contact protocols for new customers</li>
-                    <li>Design data-driven retention offers</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            st.metric("Overall Churn Rate", f"{churn_rate:.1f}%")
+            st.metric("Avg Tenure (Churned)", f"{avg_tenure_churn:.1f} months")
         
         with col2:
-            st.markdown("""
-            <div class="insight-box">
-                <h4>Medium-term Strategies (1-6 months)</h4>
-                <ul>
-                    <li>Deploy real-time churn scoring system</li>
-                    <li>Launch comprehensive customer success programs</li>
-                    <li>Optimize pricing structures for high-risk segments</li>
-                    <li>Enhance digital customer experience platforms</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            st.metric("Avg Monthly Charges (Churned)", f"${avg_monthly_churn:.2f}")
+            st.metric("Avg Tenure (Retained)", f"{avg_tenure_stay:.1f} months")
         
         with col3:
+            st.metric("Avg Monthly Charges (Retained)", f"${avg_monthly_stay:.2f}")
+            revenue_at_risk = len(data[data['Churn'] == 'Yes']) * avg_monthly_churn * 12
+            st.metric("Annual Revenue at Risk", f"${revenue_at_risk:,.2f}")
+        
+        # Detailed insights
+        st.markdown("### Detailed Analysis")
+        
+        insights_tabs = st.tabs(["Churn Drivers", "Business Impact", "Recommendations", "Model Performance"])
+        
+        with insights_tabs[0]:
+            st.markdown("### Primary Churn Drivers Identified:")
+            
+            # Contract type analysis
+            contract_churn = data.groupby('Contract')['Churn'].apply(lambda x: (x == 'Yes').mean() * 100)
+            
+            # Payment method analysis
+            payment_churn = data.groupby('PaymentMethod')['Churn'].apply(lambda x: (x == 'Yes').mean() * 100)
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                fig_contract = px.bar(x=contract_churn.index, y=contract_churn.values,
+                                    title="Churn Rate by Contract Type",
+                                    labels={'x': 'Contract Type', 'y': 'Churn Rate (%)'},
+                                    color=contract_churn.values,
+                                    color_continuous_scale='Reds')
+                st.plotly_chart(fig_contract, use_container_width=True)
+            
+            with col2:
+                fig_payment = px.bar(x=payment_churn.index, y=payment_churn.values,
+                                   title="Churn Rate by Payment Method",
+                                   labels={'x': 'Payment Method', 'y': 'Churn Rate (%)'},
+                                   color=payment_churn.values,
+                                   color_continuous_scale='Reds')
+                fig_payment.update_xaxes(tickangle=45)
+                st.plotly_chart(fig_payment, use_container_width=True)
+            
             st.markdown("""
-            <div class="insight-box">
-                <h4>Long-term Initiatives (6+ months)</h4>
-                <ul>
-                    <li>Develop sophisticated customer lifecycle programs</li>
-                    <li>Implement continuous model monitoring and updates</li>
-                    <li>Create comprehensive value communication strategies</li>
-                    <li>Establish advanced loyalty and rewards programs</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    with tab4:
-        if st.session_state.model_metrics:
-            st.markdown("### Model Performance Analysis")
+            **Key Findings:**
+            - Month-to-month contracts show highest churn risk
+            - Electronic check payments correlate with higher churn
+            - Fiber optic customers have mixed retention patterns
+            - Senior citizens show different churn behaviors
+            - New customers (low tenure) are most vulnerable
+            """)
+        
+        with insights_tabs[1]:
+            st.markdown("### Business Impact Analysis:")
             
-            # Best model identification
-            best_model = None
-            best_f1 = 0
+            # Calculate financial impact
+            total_customers = len(data)
+            churned_customers = len(data[data['Churn'] == 'Yes'])
+            monthly_revenue_lost = data[data['Churn'] == 'Yes']['MonthlyCharges'].sum()
+            annual_revenue_lost = monthly_revenue_lost * 12
             
-            for model_name, results in st.session_state.model_metrics.items():
-                if results['metrics']['F1-Score'] > best_f1:
-                    best_f1 = results['metrics']['F1-Score']
-                    best_model = model_name
+            # Customer acquisition cost (estimated)
+            estimated_cac = 200  # Average customer acquisition cost
+            total_acquisition_cost = churned_customers * estimated_cac
             
             col1, col2 = st.columns(2)
             
             with col1:
                 st.markdown(f"""
-                <div class="metric-card">
-                    <h3 style="color: #27ae60;">Best Performing Model</h3>
-                    <h2>{best_model}</h2>
-                    <p>F1-Score: {best_f1:.4f}</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.markdown("""
-                <div class="insight-box">
-                    <h4>Model Capabilities</h4>
-                    <ul>
-                        <li>High accuracy in identifying churn patterns</li>
-                        <li>Balanced precision and recall performance</li>
-                        <li>Robust feature importance insights</li>
-                        <li>Reliable probability estimation</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
+                **Financial Impact:**
+                - Customers Lost: {churned_customers:,}
+                - Monthly Revenue Lost: ${monthly_revenue_lost:,.2f}
+                - Annual Revenue Lost: ${annual_revenue_lost:,.2f}
+                - Replacement Cost: ${total_acquisition_cost:,.2f}
+                - **Total Annual Impact: ${annual_revenue_lost + total_acquisition_cost:,.2f}**
+                """)
             
             with col2:
-                st.markdown("""
-                <div class="insight-box">
-                    <h4>Business Implementation Benefits</h4>
-                    <ul>
-                        <li>Early warning system for at-risk customers</li>
-                        <li>Reduced customer acquisition costs</li>
-                        <li>Protected recurring revenue streams</li>
-                        <li>Enabled personalized retention strategies</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
-        else:
-            st.info("Model performance metrics will be displayed after completing model training.")
+                # Revenue impact visualization
+                impact_data = pd.DataFrame({
+                    'Category': ['Revenue Lost', 'Acquisition Cost'],
+                    'Amount': [annual_revenue_lost, total_acquisition_cost]
+                })
+                
+                fig_impact = px.pie(impact_data, values='Amount', names='Category',
+                                  title="Annual Financial Impact Breakdown",
+                                  color_discrete_sequence=['#ff6b6b', '#feca57'])
+                st.plotly_chart(fig_impact, use_container_width=True)
+        
+        with insights_tabs[2]:
+            st.markdown("### Strategic Recommendations:")
+            
+            st.markdown("""
+            **Immediate Actions (0-30 days):**
+            1. **Target High-Risk Segments**: Focus on month-to-month contract customers
+            2. **Payment Method Strategy**: Incentivize automatic payment methods
+            3. **Proactive Outreach**: Contact customers with tenure < 6 months
+            4. **Retention Offers**: Design personalized packages for at-risk customers
+            
+            **Medium-term Strategies (1-6 months):**
+            1. **Predictive Analytics**: Implement real-time churn scoring
+            2. **Customer Success Program**: Dedicated support for new customers
+            3. **Pricing Optimization**: Review pricing structure for fiber services
+            4. **Digital Experience**: Improve online service management tools
+            
+            **Long-term Initiatives (6+ months):**
+            1. **Segmentation Strategy**: Develop customer lifecycle programs
+            2. **Continuous Monitoring**: Regular model updates and retraining
+            3. **Value Demonstration**: Clearer communication of service benefits
+            4. **Loyalty Programs**: Reward long-term customers
+            """)
+            
+            # ROI calculation for retention efforts
+            st.markdown("### ROI Potential:")
+            
+            retention_scenarios = pd.DataFrame({
+                'Scenario': ['5% Reduction', '10% Reduction', '15% Reduction'],
+                'Customers_Saved': [churned_customers * 0.05, churned_customers * 0.10, churned_customers * 0.15],
+                'Annual_Savings': [annual_revenue_lost * 0.05, annual_revenue_lost * 0.10, annual_revenue_lost * 0.15]
+            })
+            
+            fig_roi = px.bar(retention_scenarios, x='Scenario', y='Annual_Savings',
+                           title="Potential Annual Savings from Churn Reduction",
+                           color='Annual_Savings',
+                           color_continuous_scale='Blues')
+            fig_roi.update_layout(yaxis_title="Annual Savings ($)")
+            st.plotly_chart(fig_roi, use_container_width=True)
+        
+        with insights_tabs[3]:
+            if st.session_state.model_metrics:
+                st.markdown("### Model Performance Summary:")
+                
+                # Best performing model
+                best_model = None
+                best_f1 = 0
+                
+                for model_name, results in st.session_state.model_metrics.items():
+                    if results['metrics']['F1-Score'] > best_f1:
+                        best_f1 = results['metrics']['F1-Score']
+                        best_model = model_name
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.success(f"**Best Performing Model: {best_model}**")
+                    st.markdown(f"**F1-Score: {best_f1:.4f}**")
+                    
+                    st.markdown("""
+                    **Model Strengths:**
+                    - High accuracy in identifying churn patterns
+                    - Good balance between precision and recall
+                    - Robust feature importance insights
+                    - Reliable probability estimates
+                    """)
+                
+                with col2:
+                    st.markdown("""
+                    **Implementation Benefits:**
+                    - **Early Warning System**: Identify at-risk customers before they churn
+                    - **Cost Reduction**: Lower customer acquisition costs
+                    - **Revenue Protection**: Maintain recurring revenue streams
+                    - **Personalization**: Tailored retention strategies
+                    """)
+                
+                # Model comparison summary
+                if len(st.session_state.model_metrics) > 1:
+                    st.markdown("### Model Comparison Insights:")
+                    
+                    comparison_df = pd.DataFrame({
+                        'Metric': ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'ROC-AUC'],
+                        'Random Forest': [
+                            st.session_state.model_metrics['Random Forest']['metrics']['Accuracy'],
+                            st.session_state.model_metrics['Random Forest']['metrics']['Precision'],
+                            st.session_state.model_metrics['Random Forest']['metrics']['Recall'],
+                            st.session_state.model_metrics['Random Forest']['metrics']['F1-Score'],
+                            st.session_state.model_metrics['Random Forest']['metrics']['ROC-AUC']
+                        ],
+                        'SVM': [
+                            st.session_state.model_metrics['SVM']['metrics']['Accuracy'],
+                            st.session_state.model_metrics['SVM']['metrics']['Precision'],
+                            st.session_state.model_metrics['SVM']['metrics']['Recall'],
+                            st.session_state.model_metrics['SVM']['metrics']['F1-Score'],
+                            st.session_state.model_metrics['SVM']['metrics']['ROC-AUC']
+                        ]
+                    })
+                    
+                    st.dataframe(comparison_df.round(4), use_container_width=True)
+            
+            else:
+                st.info("Model performance metrics will appear here after training models.")
+    
+    else:
+        st.error("No data available for analysis. Please load your dataset first.")
 
 def page7():
-    st.markdown("## Batch Prediction Processing")
+    st.subheader("Batch Prediction")
 
+    # Check if models are available from main app
     if not st.session_state.models:
-        st.markdown("""
-        <div class="insight-box">
-            <h4>Models Not Available</h4>
-            <p>Please complete model training before using batch prediction functionality.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.error("No trained models available. Please complete the model training step first.")
+        st.info("Go to 'Model Training' page and train models before using batch prediction.")
         return
 
-    st.markdown("""
-    <div class="team-card">
-        <h3>Batch Prediction Center</h3>
-        <p>Upload a CSV file to generate churn predictions for multiple customers simultaneously</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Professional file upload
-    uploaded_file = st.file_uploader("Upload CSV file for batch prediction", type="csv", 
-                                    help="Upload a CSV file containing customer data for bulk predictions")
+    st.markdown("### Upload CSV File for Batch Predictions")
+    st.info("Upload a CSV file with customer data to get churn predictions for multiple customers at once.")
     
-    if uploaded_file:
-        user_df = pd.read_csv(uploaded_file)
+    # File uploader for batch prediction
+    batch_file = st.file_uploader("Choose CSV file for batch prediction", type="csv", key="batch_upload")
+    
+    if batch_file is not None:
+        try:
+            # Read the uploaded file
+            batch_df = pd.read_csv(batch_file)
+            
+            st.success("File uploaded successfully!")
+            st.markdown("### Data Preview")
+            st.dataframe(batch_df.head(), use_container_width=True)
+            
+            # Show data info
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Total Records", len(batch_df))
+            with col2:
+                st.metric("Features", len(batch_df.columns))
+            with col3:
+                missing_data = batch_df.isnull().sum().sum()
+                st.metric("Missing Values", missing_data)
+            
+            # Model selection for batch prediction
+            selected_model = st.selectbox("Choose Model for Batch Prediction", 
+                                        list(st.session_state.models.keys()),
+                                        key="batch_model_select")
+            
+            if st.button("Run Batch Prediction", type="primary"):
+                with st.spinner("Processing batch predictions..."):
+                    try:
+                        # Prepare the data
+                        batch_processed = batch_df.copy()
+                        
+                        # Handle customer ID if present
+                        if 'customerID' in batch_processed.columns:
+                            customer_ids = batch_processed['customerID']
+                            batch_processed = batch_processed.drop('customerID', axis=1)
+                        else:
+                            customer_ids = [f"Customer_{i+1}" for i in range(len(batch_processed))]
+                        
+                        # Remove target column if present
+                        if 'Churn' in batch_processed.columns:
+                            batch_processed = batch_processed.drop('Churn', axis=1)
+                        
+                        # Handle TotalCharges conversion
+                        if 'TotalCharges' in batch_processed.columns:
+                            batch_processed['TotalCharges'] = pd.to_numeric(batch_processed['TotalCharges'], errors='coerce')
+                            batch_processed['TotalCharges'].fillna(batch_processed['TotalCharges'].median(), inplace=True)
+                        
+                        # Encode categorical variables using the same mapping as training
+                        if 'label_encoders' in st.session_state:
+                            for col, le in st.session_state.label_encoders.items():
+                                if col in batch_processed.columns and col != 'Churn':
+                                    # Handle unseen categories
+                                    unique_values = batch_processed[col].unique()
+                                    for val in unique_values:
+                                        if val not in le.classes_:
+                                            # Add new class to encoder
+                                            le.classes_ = np.append(le.classes_, val)
+                                    batch_processed[col] = le.transform(batch_processed[col])
+                        else:
+                            # If no label encoders, do basic encoding
+                            categorical_cols = batch_processed.select_dtypes(include=['object']).columns
+                            for col in categorical_cols:
+                                batch_processed[col] = LabelEncoder().fit_transform(batch_processed[col])
+                        
+                        # Ensure all required features are present
+                        if 'feature_names' in st.session_state:
+                            required_features = st.session_state.feature_names
+                            for feature in required_features:
+                                if feature not in batch_processed.columns:
+                                    batch_processed[feature] = 0  # Default value for missing features
+                            
+                            # Select only required features in correct order
+                            batch_processed = batch_processed[required_features]
+                        
+                        # Get the trained model and preprocessors
+                        model = st.session_state.models[selected_model]
+                        
+                        # Apply preprocessing
+                        if selected_model == "SVM":
+                            batch_imputed = st.session_state.imputer.transform(batch_processed)
+                            batch_scaled = st.session_state.scaler.transform(batch_imputed)
+                            predictions = model.predict(batch_scaled)
+                            probabilities = model.predict_proba(batch_scaled)[:, 1]
+                        else:  # Random Forest
+                            batch_imputed = st.session_state.imputer.transform(batch_processed)
+                            predictions = model.predict(batch_imputed)
+                            probabilities = model.predict_proba(batch_imputed)[:, 1]
+                        
+                        # Create results DataFrame
+                        results_df = pd.DataFrame({
+                            'CustomerID': customer_ids,
+                            'Churn_Prediction': ['Yes' if pred == 1 else 'No' for pred in predictions],
+                            'Churn_Probability': probabilities.round(4),
+                            'Risk_Level': ['High' if prob > 0.7 else 'Medium' if prob > 0.4 else 'Low' for prob in probabilities]
+                        })
+                        
+                        st.success("Batch predictions completed successfully!")
+                        
+                        # Display results summary
+                        st.markdown("### Prediction Summary")
+                        
+                        col1, col2, col3, col4 = st.columns(4)
+                        
+                        with col1:
+                            total_customers = len(results_df)
+                            st.metric("Total Customers", total_customers)
+                        
+                        with col2:
+                            churned_predictions = len(results_df[results_df['Churn_Prediction'] == 'Yes'])
+                            st.metric("Predicted Churners", churned_predictions)
+                        
+                        with col3:
+                            churn_rate_pred = (churned_predictions / total_customers) * 100
+                            st.metric("Predicted Churn Rate", f"{churn_rate_pred:.1f}%")
+                        
+                        with col4:
+                            high_risk = len(results_df[results_df['Risk_Level'] == 'High'])
+                            st.metric("High Risk Customers", high_risk)
+                        
+                        # Display detailed results
+                        st.markdown("### Detailed Results")
+                        st.dataframe(results_df, use_container_width=True)
+                        
+                        # Risk distribution chart
+                        st.markdown("### Risk Distribution")
+                        risk_counts = results_df['Risk_Level'].value_counts()
+                        fig_risk = px.pie(values=risk_counts.values, 
+                                        names=risk_counts.index,
+                                        title="Customer Risk Distribution",
+                                        color_discrete_sequence=['#ff6b6b', '#feca57', '#90EE90'])
+                        st.plotly_chart(fig_risk, use_container_width=True)
+                        
+                        # Probability distribution
+                        fig_prob = px.histogram(results_df, x='Churn_Probability', 
+                                              title="Churn Probability Distribution",
+                                              nbins=20)
+                        st.plotly_chart(fig_prob, use_container_width=True)
+                        
+                        # Download button for results
+                        csv_data = results_df.to_csv(index=False)
+                        st.download_button(
+                            label="Download Results as CSV",
+                            data=csv_data,
+                            file_name=f"batch_churn_predictions_{selected_model.lower().replace(' ', '_')}.csv",
+                            mime="text/csv"
+                        )
+                        
+                        # Action recommendations
+                        st.markdown("### Recommended Actions")
+                        
+                        high_risk_customers = results_df[results_df['Risk_Level'] == 'High']
+                        medium_risk_customers = results_df[results_df['Risk_Level'] == 'Medium']
+                        
+                        if len(high_risk_customers) > 0:
+                            st.error(f"**High Priority**: {len(high_risk_customers)} customers need immediate attention")
+                            with st.expander("View High Risk Customers"):
+                                st.dataframe(high_risk_customers, use_container_width=True)
+                        
+                        if len(medium_risk_customers) > 0:
+                            st.warning(f"**Medium Priority**: {len(medium_risk_customers)} customers need proactive engagement")
+                            with st.expander("View Medium Risk Customers"):
+                                st.dataframe(medium_risk_customers, use_container_width=True)
+                        
+                    except Exception as e:
+                        st.error(f"Error in batch prediction: {str(e)}")
+                        st.info("Please ensure your data has the same format as the training data.")
         
-        st.markdown("### Data Preview")
-        st.dataframe(user_df.head(), use_container_width=True)
+        except Exception as e:
+            st.error(f"Error reading the file: {str(e)}")
+    
+    else:
+        st.info("Please upload a CSV file to start batch prediction.")
         
-        col1, col2, col3 = st.columns([1, 1, 1])
-        
-        with col1:
-            st.metric("Total Records", len(user_df))
-        with col2:
-            st.metric("Features", len(user_df.columns))
-        with col3:
-            selected_model = st.selectbox("Select Model", list(st.session_state.models.keys()))
-        
-        if st.button("Generate Batch Predictions", type="primary"):
-            with st.spinner("Processing predictions..."):
+        # Show expected format
+        st.markdown("### Expected Data Format")
+        st.markdown("""
+        Your CSV file should contain the following columns:
+        - customerID (optional)
+        - gender, SeniorCitizen, Partner, Dependents
+        - tenure, PhoneService, MultipleLines, InternetService
+        - OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport
+        - StreamingTV, StreamingMovies, Contract, PaperlessBilling
+        - PaymentMethod, MonthlyCharges, TotalCharges
+        """)
 
-                # --- 1) IDs & clean copy ---
-                if "customerID" in user_df.columns:
-                    ids = user_df["customerID"].astype(str).reset_index(drop=True)
-                    prediction_df = user_df.drop(columns=["customerID"]).copy()
-                else:
-                    ids = pd.Series([f"Customer-{i+1}" for i in range(len(user_df))], dtype=str)
-                    prediction_df = user_df.copy()
-            
-                # --- 2) Enforce training schema if available ---
-                # Save these when you train: st.session_state.feature_names = list(X_train.columns)
-                expected_cols = st.session_state.get("feature_names", list(prediction_df.columns))
-                missing = [c for c in expected_cols if c not in prediction_df.columns]
-                extra = [c for c in prediction_df.columns if c not in expected_cols]
-            
-                if missing:
-                    st.error(
-                        "Your CSV is missing required columns:\n\n- " + "\n- ".join(missing) +
-                        "\n\nPlease upload a file with the same structure as the training data."
-                    )
-                    st.stop()
-            
-                if extra:
-                    st.warning(
-                        "Extra columns in the CSV (ignored for prediction):\n\n- " + "\n- ".join(extra)
-                    )
-            
-                # Reorder/select to match training exactly
-                prediction_df = prediction_df[[c for c in expected_cols if c in prediction_df.columns]]
-            
-                # --- 3) Get model & safe probability helper ---
-                model = st.session_state.models[selected_model]
-            
-                def get_probabilities_safe(clf, X):
-                    """Return probabilities in [0,1] robustly."""
-                    import numpy as np
-                    # If your model is a Pipeline, this works end-to-end on raw X
-                    if hasattr(clf, "predict_proba"):
-                        proba = clf.predict_proba(X)
-                        if proba.ndim == 2 and proba.shape[1] >= 2:
-                            return proba[:, 1]
-                        # Binary but returned shape (n,) or odd estimators
-                        return np.ravel(proba)
-                    if hasattr(clf, "decision_function"):
-                        scores = clf.decision_function(X)
-                        scores = np.array(scores).reshape(-1)
-                        # Fallback scaling to [0,1] (not calibrated; consider CalibratedClassifierCV at training time)
-                        s_min, s_max = scores.min(), scores.max()
-                        if s_max > s_min:
-                            return (scores - s_min) / (s_max - s_min + 1e-12)
-                        return np.full_like(scores, 0.5, dtype=float)
-                    # Last resort: use hard predictions as 0/1
-                    preds = clf.predict(X)
-                    return np.array(preds, dtype=float)
-            
-                try:
-                    # --- 4) Predict labels & probabilities ---
-                    predictions = model.predict(prediction_df)
-            
-                    # If model lacks predict_proba (e.g., LinearSVC or SVC(probability=False)), this won’t crash:
-                    probabilities = get_probabilities_safe(model, prediction_df)
-            
-                    # --- 5) Build results (ensure equal length & simple index) ---
-                    import numpy as np
-                    churn_labels = np.where(np.array(predictions) == 1, "High Risk", "Low Risk")
-                    probs_pct = (np.array(probabilities) * 100).round(1)
-            
-                    # Risk buckets on raw [0,1] probs (if we fell back to scaled scores, treat as relative risk)
-                    risk_cat = np.where(probabilities > 0.7, "High",
-                                np.where(probabilities > 0.4, "Medium", "Low"))
-            
-                    results_df = pd.DataFrame({
-                        "CustomerID": ids.tolist(),
-                        "Churn_Prediction": churn_labels.tolist(),
-                        "Churn_Probability": probs_pct.tolist(),
-                        "Risk_Category": risk_cat.tolist()
-                    })
-            
-                    st.success("Predictions completed successfully!")
-            
-                    # Display results
-                    st.markdown("### Prediction Results")
-                    st.dataframe(results_df, use_container_width=True)
-            
-                    # --- 6) Summary metrics ---
-                    high_risk = int((probabilities > 0.7).sum())
-                    medium_risk = int(((probabilities > 0.4) & (probabilities <= 0.7)).sum())
-                    low_risk = int((probabilities <= 0.4).sum())
-                    avg_prob = float(np.mean(probabilities) * 100)
-            
-                    col1, col2, col3, col4 = st.columns(4)
-                    with col1:
-                        st.markdown(f"""
-                        <div class="metric-card">
-                            <h4 style="color: #e74c3c;">High Risk</h4>
-                            <h2>{high_risk}</h2>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    with col2:
-                        st.markdown(f"""
-                        <div class="metric-card">
-                            <h4 style="color: #f39c12;">Medium Risk</h4>
-                            <h2>{medium_risk}</h2>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    with col3:
-                        st.markdown(f"""
-                        <div class="metric-card">
-                            <h4 style="color: #27ae60;">Low Risk</h4>
-                            <h2>{low_risk}</h2>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    with col4:
-                        st.markdown(f"""
-                        <div class="metric-card">
-                            <h4 style="color: #3498db;">Average Probability</h4>
-                            <h2>{avg_prob:.1f}%</h2>
-                        </div>
-                        """, unsafe_allow_html=True)
-            
-                    # Risk chart
-                    risk_dist = pd.DataFrame({
-                        'Risk Level': ['Low Risk', 'Medium Risk', 'High Risk'],
-                        'Count': [low_risk, medium_risk, high_risk]
-                    })
-                    fig_risk = px.pie(
-                        risk_dist, values='Count', names='Risk Level',
-                        title="Risk Distribution Analysis",
-                        color_discrete_sequence=['#27ae60', '#f39c12', '#e74c3c']
-                    )
-                    fig_risk.update_layout(title_font_size=18)
-                    st.plotly_chart(fig_risk, use_container_width=True)
-            
-                    # Download
-                    csv = results_df.to_csv(index=False)
-                    st.download_button(
-                        label="Download Results as CSV",
-                        data=csv,
-                        file_name="churn_predictions.csv",
-                        mime="text/csv",
-                        type="primary"
-                    )
-            
-                except Exception as e:
-                    import traceback
-                    st.error(f"Error during prediction: {e}")
-                    st.caption("Full traceback:")
-                    st.code(traceback.format_exc())
-                    st.info("Please ensure your CSV uses the same schema and preprocessing as the training data.")
-
-
-# Page mapping
-pages = [page1, page2, page3, page4, page5, page6, page7]
-
-# Display selected page
-pages[selected_page_index]()
+# Page routing
+if selected_page == 'Home & Data Overview':
+    page1()
+elif selected_page == 'Data Preprocessing':
+    page2()
+elif selected_page == 'Model Training':
+    page3()
+elif selected_page == 'Model Evaluation':
+    page4()
+elif selected_page == 'Prediction Interface':
+    page5()
+elif selected_page == 'Insights & Conclusions':
+    page6()
+elif selected_page == 'Batch Prediction':
+    page7()
