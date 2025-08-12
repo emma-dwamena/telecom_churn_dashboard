@@ -38,7 +38,7 @@ st.set_page_config(
 
 # --- Fixed top tabs (UI-only, no ML changes) ---
 st.markdown(
-    """
+    '''
     <style>
     /* Fix the entire tab container to the very top */
     div[data-testid="stTabs"] {
@@ -72,7 +72,7 @@ st.markdown(
         z-index: 10001 !important;
     }
     </style>
-    """,
+    ''',
     unsafe_allow_html=True
 )
 # --- End Fixed top tabs ---
