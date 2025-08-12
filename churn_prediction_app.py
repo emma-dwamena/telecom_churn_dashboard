@@ -35,6 +35,43 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 warnings.filterwarnings('ignore')
 
 st.set_page_config(
+
+# --- Injected: Fixed top tabs (UI only) ---
+st.markdown("""
+<style>
+/* Fix the entire tab container to the very top */
+div[data-testid="stTabs"] {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 10000 !important;
+    background-color: #f9f9f9 !important;
+    border-bottom: 1px solid #ddd !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+    padding-top: 0.3rem !important;
+    padding-bottom: 0.3rem !important;
+}
+
+/* Ensure the tab list inside remains aligned */
+div[data-testid="stTabs"] > div[role="tablist"] {
+    position: relative !important;
+    background: transparent !important;
+}
+
+/* Add top padding to page content so it's not hidden behind fixed tabs */
+.block-container {
+    padding-top: 4.5rem !important;
+}
+
+/* Keep Streamlit header menu on top */
+header[data-testid="stHeader"] {
+    z-index: 10001 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+# --- End Injected ---
      page_title='Customer Churn Prediction',
      page_icon='📡',
      layout='wide',
