@@ -42,39 +42,15 @@ st.set_page_config(
      )
 
 # Freeze the tabs at the very top (UI only)
-st.markdown(
-    """
-    <style>
-    /* Pin the entire tabs container to the top */
-    div[data-testid="stTabs"] {
-      position: fixed; top: 0; left: 0; right: 0; width: 100%;
-      z-index: 10000;
-      background: var(--bg, #f6f8fb);  /* switch to #ffffff if you use a white theme */
-      margin: 0;
-    }
-
-    /* Give the tablist a clean divider + subtle shadow */
-    div[data-testid="stTabs"] > div[role="tablist"] {
-      position: relative;
-      border-bottom: 1px solid #e5e7eb;
-      box-shadow: 0 2px 6px rgba(0,0,0,.06);
-      padding-top: .35rem; padding-bottom: .35rem;
-      background: transparent;
-    }
-
-    /* Offset the page content so it's not hidden under the fixed tabs */
-    .block-container { padding-top: 4.8rem; }  /* adjust to 4.2–5.4rem if needed */
-
-    /* Keep Streamlit's top-right menu above the tabs */
-    header[data-testid="stHeader"] { z-index: 10100; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-
-
+st.markdown("""
+<style>
+div[data-testid="stTabs"] > div[role="tablist"] {
+  position: sticky; top: 0; z-index: 1000;
+  background: white; padding-top: 0.5rem; margin-top: -0.5rem;
+  border-bottom: 1px solid #eee;
+}
+</style>
+""", unsafe_allow_html=True)
 
 st.markdown('''
 <style>
