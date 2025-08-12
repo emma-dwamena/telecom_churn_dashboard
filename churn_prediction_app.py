@@ -37,64 +37,49 @@ warnings.filterwarnings('ignore')
 st.set_page_config(
 
 # --- Fixed top tabs (UI-only, no ML changes) ---
-st.markdown(
-    '''
-    <style>
-    /* Fix the entire tab container to the very top */
-    div[data-testid="stTabs"] {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-        z-index: 10000 !important;
-        background-color: #f6f8fb !important; /* match your theme bg */
-        border-bottom: 1px solid #e5e7eb !important;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
-        padding-top: 0.35rem !important;
-        padding-bottom: 0.35rem !important;
-        margin: 0 !important;
-    }
+_TABS_CSS = """
+<style>
+/* Fix the entire tab container to the very top */
+div[data-testid='stTabs'] {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 10000 !important;
+    background-color: #f6f8fb !important; /* match app bg */
+    border-bottom: 1px solid #e5e7eb !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+    margin: 0 !important;
+}
 
-    /* Keep the actual tablist aligned and readable */
-    div[data-testid="stTabs"] > div[role="tablist"] {
-        position: relative !important;
-        background: transparent !important;
-    }
+/* Keep the actual tablist aligned and readable */
+div[data-testid='stTabs'] > div[role='tablist'] {
+    position: relative !important;
+    background: transparent !important;
+}
 
-    /* Make room for the fixed tabs so content isn't hidden underneath */
-    .block-container {
-        padding-top: 4.6rem !important;  /* adjust if your tabs are taller/shorter */
-    }
+/* Make room for the fixed tabs so content isn't hidden underneath */
+.block-container {
+    padding-top: 4.8rem !important;  /* adjust if your tabs are taller/shorter */
+}
 
-    /* Keep Streamlit header/menu above tabs */
-    header[data-testid="stHeader"] {
-        z-index: 10001 !important;
-    }
-    </style>
-    ''',
-    unsafe_allow_html=True
-)
+/* Keep Streamlit header/menu above tabs */
+header[data-testid='stHeader'] {
+    z-index: 10001 !important;
+}
+</style>
+"""
+import streamlit as st as _st_for_css  # ensure streamlit is imported before using st.markdown
+_st_for_css.markdown(_TABS_CSS, unsafe_allow_html=True)
 # --- End Fixed top tabs ---
      page_title='Customer Churn Prediction',
      page_icon='📡',
      layout='wide',
      initial_sidebar_state='expanded',
      )
-
-st.markdown("""
-<style>
-div[data-testid="stTabs"] > div[role="tablist"] {
-  position: sticky; top: 0; z-index: 1000;
-  background: white; padding-top: 0.5rem; margin-top: -0.5rem;
-  border-bottom: 1px solid #eee;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
-
 
 st.markdown('''
 <style>
