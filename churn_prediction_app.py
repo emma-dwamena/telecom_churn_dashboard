@@ -161,7 +161,7 @@ section[data-testid="stSidebar"] div[data-testid="stFileUploader"] label:hover {
 #""")
 
 Logo = Image.open("telco_logo.jpg")
-st.image(Logo, caption="", width=150)
+st.sidebar.image(Logo, caption="", width=150)
 
 # Initialize session state for data persistence across pages
 if 'df1' not in st.session_state:
