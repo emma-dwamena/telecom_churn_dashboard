@@ -37,7 +37,8 @@ warnings.filterwarnings('ignore')
 st.set_page_config(
 
 # --- Injected: Fixed top tabs (UI only) ---
-st.markdown("""
+st.markdown(
+    """
 <style>
 /* Fix the entire tab container to the very top */
 div[data-testid="stTabs"] {
