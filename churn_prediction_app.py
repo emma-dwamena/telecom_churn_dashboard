@@ -72,7 +72,7 @@ header[data-testid='stHeader'] {
 }
 </style>
 """
-import streamlit as st as _st_for_css  # ensure streamlit is imported before using st.markdown
+import streamlit as st as _st_for_css = st  # ensure streamlit is imported before using st.markdown
 _st_for_css.markdown(_TABS_CSS, unsafe_allow_html=True)
 # --- End Fixed top tabs ---
      page_title='Customer Churn Prediction',
