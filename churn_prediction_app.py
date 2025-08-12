@@ -10,33 +10,6 @@ except Exception:
     pass
 import plotly.graph_objects as go
 import streamlit as st
-
-# === UI helper: freeze top navigation tabs (no ML code touched) ===
-def _freeze_top_tabs():
-    css = """
-    <style>
-    /* Freeze only the FIRST st.tabs (main navigation) */
-    div[data-testid='stTabs']:first-of-type {
-        position: fixed; top: 0; left: 0; right: 0; width: 100%;
-        z-index: 10000;
-        background: var(--bg, #f6f8fb);
-        margin: 0;
-    }
-    div[data-testid='stTabs']:first-of-type > div[role='tablist'] {
-        position: relative; top: 0; z-index: 10001;
-        background: transparent;
-        border-bottom: 1px solid #e5e7eb;
-        box-shadow: 0 2px 6px rgba(0,0,0,.06);
-        padding-top: .35rem; padding-bottom: .35rem;
-    }
-    /* Offset content so it isn't hidden under the fixed tabs */
-    .block-container { padding-top: 4.8rem; }
-    /* Keep Streamlit header/menu on top */
-    header[data-testid='stHeader'] { z-index: 10100; }
-    </style>
-    """
-    st.markdown(css, unsafe_allow_html=True)
-# === End helper ===
 import sklearn
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -62,13 +35,25 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 warnings.filterwarnings('ignore')
 
 st.set_page_config(
-_freeze_top_tabs()
-
      page_title='Customer Churn Prediction',
      page_icon='📡',
      layout='wide',
      initial_sidebar_state='expanded',
      )
+
+st.markdown("""
+<style>
+div[data-testid="stTabs"] > div[role="tablist"] {
+  position: sticky; top: 0; z-index: 1000;
+  background: white; padding-top: 0.5rem; margin-top: -0.5rem;
+  border-bottom: 1px solid #eee;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+
 
 st.markdown('''
 <style>
