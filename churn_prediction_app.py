@@ -41,36 +41,15 @@ st.set_page_config(
      initial_sidebar_state='expanded',
      )
 
-
 st.markdown("""
 <style>
-/* === Fixed top tabs (UI-only; no ML code touched) === */
-
-/* Fix the tabs container to the very top */
-div[data-testid="stTabs"] {
-  position: fixed; top: 0; left: 0; right: 0; width: 100%;
-  z-index: 10000;
-  background: var(--bg, #f6f8fb);
-  margin: 0;
-}
-
-/* Keep the tablist readable with a bottom border & shadow */
 div[data-testid="stTabs"] > div[role="tablist"] {
-  position: relative; top: 0; z-index: 10001;
-  background: transparent;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 2px 6px rgba(0,0,0,.06);
-  padding-top: .35rem; padding-bottom: .35rem;
+  position: sticky; top: 0; z-index: 1000;
+  background: white; padding-top: 0.5rem; margin-top: -0.5rem;
+  border-bottom: 1px solid #eee;
 }
-
-/* Offset page content so it doesn't hide under the fixed tabs */
-.block-container { padding-top: 4.8rem; }
-
-/* Keep Streamlit header/menu clickable above tabs */
-header[data-testid="stHeader"] { z-index: 10100; }
 </style>
 """, unsafe_allow_html=True)
-
 
 
 
